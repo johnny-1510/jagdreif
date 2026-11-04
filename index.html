@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://exybfcrwqkossiivzuoc.supabase.co; base-uri 'none'; form-action 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://tile.openstreetmap.org; connect-src 'self' https://exybfcrwqkossiivzuoc.supabase.co https://api.brightsky.dev; base-uri 'none'; form-action 'self'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -274,6 +274,29 @@ ol.steps{margin:0;padding:0;list-style:none;display:grid;gap:2px}
 .az-hint{position:absolute;left:12px;bottom:24px;right:120px;z-index:3;font-size:13px;color:#e9e3cf;text-shadow:0 1px 6px #000;transition:opacity .8s;pointer-events:none}
 .glasov{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
 .glasov i{position:absolute;left:50%;top:50%;width:min(86%,78vh);aspect-ratio:1.55;transform:translate(-50%,-50%);border-radius:50% / 62%;box-shadow:0 0 0 200vmax rgba(5,7,5,.96),inset 0 0 30px 10px rgba(5,7,5,.85)}
+.ringwrap{position:relative;flex:none;width:96px;height:96px}.ringnum{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:28px;color:var(--ink)}.ringnum small{font-size:14px;color:var(--muted)}
+.reifelist{display:grid;border-top:1px solid var(--line)}
+.rf{border-bottom:1px solid var(--line)}.rf summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:22px 112px 1fr 44px;gap:10px;align-items:center;padding:10px 0}.rf summary::-webkit-details-marker{display:none}
+.rfn{font-family:var(--display);font-weight:700;color:var(--messing)}.rft{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rfp{font-family:var(--mono);font-size:13px;text-align:right}
+.rfd{display:grid;gap:8px;padding:0 0 12px 32px}.rfd ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:15px}.tagf{font-family:var(--mono);font-size:11px;color:var(--falsch);white-space:nowrap}
+.hello{display:grid;gap:6px;padding-top:4px}.hello-h{font-size:clamp(30px,8vw,44px);margin:0}
+.hchips{display:flex;flex-wrap:wrap;gap:8px}.hchip{all:unset;cursor:pointer;font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:inline-flex;gap:6px;align-items:center}
+.hchip.done{border-color:color-mix(in srgb,var(--richtig) 50%,transparent);color:var(--richtig)}.hchip:hover{border-color:var(--messing)}
+.darf{border-left:4px solid var(--line)}.darf.frei{border-left-color:var(--richtig)}.darf.zu{border-left-color:var(--falsch)}
+.darfbig{font-family:var(--display);font-weight:700;font-size:42px;line-height:1.05}.darf.frei .darfbig{color:var(--richtig)}.darf.zu .darfbig{color:var(--falsch)}
+.wxnow{display:flex;gap:14px;align-items:center}.wxdir{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--messing);flex:none}
+.wxstrip{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;text-align:center;color:var(--loden-text)}.wxstrip div{display:grid;gap:2px;justify-items:center}
+.map{height:min(62vh,520px);width:100%;background:#1b211a;position:relative;z-index:0;isolation:isolate}.leaflet-container{font:inherit;background:#1b211a}
+.poi{background:none;border:none}.pin{width:28px;height:28px;border-radius:50%;background:var(--c);border:2px solid #151a15;box-shadow:0 2px 8px rgba(0,0,0,.5);display:grid;place-items:center}.pin.kirrung,.pin.wechsel,.pin.salz{width:18px;height:18px;margin:5px;border-radius:4px;transform:rotate(45deg)}
+.pinl{position:absolute;left:34px;top:5px;white-space:nowrap;font-size:12px;font-weight:700;color:#fff;text-shadow:0 1px 3px #000,0 0 6px #000}
+.mapwind{background:rgba(21,26,21,.85);color:#e9e3cf;border-radius:10px;padding:6px 10px;display:flex;gap:6px;align-items:center;font-family:var(--mono);font-size:13px;border:1px solid rgba(205,168,92,.5)}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#1e251e;color:#ecebe2}.leaflet-popup-content{font-size:14px;line-height:1.4}.lnk{all:unset;cursor:pointer;color:var(--messing);text-decoration:underline;margin-top:6px;display:inline-block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stats>div{display:grid;gap:2px}.mbars{width:100%;height:auto}.mbars text{font-size:8px;fill:var(--muted);font-family:var(--mono)}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}.badge2{display:grid;gap:2px;padding:10px;border:1px solid var(--line);border-radius:10px;opacity:.45}.badge2.on{opacity:1;border-color:color-mix(in srgb,var(--messing) 55%,transparent)}.badge2 b{font-size:14px}.badge2 span{font-size:12px;color:var(--muted)}
+.wb{border-top:1px solid var(--line)}.wb summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:10px 0;font-weight:600}.wb summary::-webkit-details-marker{display:none}.wbd{padding:0 0 12px 32px;font-size:15.5px}.wbd ol{margin:6px 0 0;padding-left:18px;display:grid;gap:6px}
+canvas.az3d.thermal{filter:grayscale(1) contrast(1.6) brightness(1.5)}
+.az-mode{display:inline-block;margin-left:10px;font-family:var(--mono);font-style:normal;font-size:12px;padding:3px 8px;border-radius:999px;background:rgba(0,0,0,.45);border:1px solid rgba(233,227,207,.4);vertical-align:middle}
+@media (max-width:420px){.stats{grid-template-columns:repeat(2,1fr)}.rf summary{grid-template-columns:22px 78px 1fr 40px}}
 /* ===== Responsive: Handy · Tablet · Laptop · Desktop ===== */
 html,body{overflow-x:clip}
 img,svg,canvas,video{max-width:100%}
@@ -1966,7 +1989,7 @@ const ICO_TILT=`<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stro
 function azScene3D(){
   cancelAnimationFrame(azRaf);clearTimeout(azT);
   if(az.i>=az.pool.length){W3.stop();return azEnd()}
-  const sc=az.pool[az.i], d=azDate(); d.setMinutes(d.getMinutes()+az.i*5);
+  const sc=az.pool[az.i], d=azDate(); d.setMinutes(d.getMinutes()+az.i*5); if(sc.night){d.setTime(Date.now());d.setHours(22,0,0,0)}
   $("#tz").innerHTML=`<div class="az-wrap"><div class="az-stage three" id="stage">
     <div class="glasov" id="glasov" hidden><i></i></div>
     <div class="az-hud"><span class="data" style="color:#e9e3cf">Anblick ${az.i+1}/5 · ${az.score} Punkte</span><span class="data" style="color:#e9e3cf">Wind: ${["SW","W","NW"][az.i%3]}, steht gut</span></div>
@@ -1980,10 +2003,11 @@ function azScene3D(){
   $("#tglas").onclick=()=>{vib(8);setGlass()};
   setTimeout(()=>{const h=$("#hint");if(h)h.style.opacity=0},4500);
   let decided=false;
-  W3.scene(sc,d,i=>{if(decided)return;const a=sc.an[i];vib(8);
+  const wmode=W3.scene(sc,d,i=>{if(decided)return;const a=sc.an[i];vib(8);
     $("#glas").innerHTML=`<div class="glas-in"><span class="eyebrow" style="color:var(--messing)">Im Glas</span><p style="margin:0;font-size:17px">${a.d}</p></div>
      <div class="row" style="flex-wrap:nowrap"><button class="btn ghost" style="flex:1" id="pass">Passieren lassen</button><button class="btn shoot" style="flex:1" id="shoot">Schuss</button></div>`;
     $("#pass").onclick=()=>decide(null);$("#shoot").onclick=()=>decide(i)});
+  if(wmode&&(wmode.night||wmode.fog))$("#msg").insertAdjacentHTML("beforeend",`<span class="az-mode">${wmode.night?"Wärmebild":wmode.fog==="dicht"?"Dichter Nebel":"Leichter Nebel"}</span>`);
   const t0=performance.now(),DUR=30000;
   const step=now=>{const lp=Math.min(1,(now-t0)/DUR);const lb=$("#lightbar");if(!lb)return;lb.style.transform=`scaleX(${1-lp})`;W3.progress(lp);if(lp>=1){decide(null,true);return}azRaf=requestAnimationFrame(step)};
   azRaf=requestAnimationFrame(step);
@@ -2122,6 +2146,278 @@ FRAGE: ${q}`;
 
 revMode="planer";
 
+/*EXT4-START*/
+/* ================= Stufe 4: Fehlerheft, Prüfungsreife, Tagesrunde, Startseite, Darf-ich-heute, Wetter, Karte, Wildbret, Rang, Jahresstrecke ================= */
+const FE=()=>ST.fehl||(ST.fehl={});
+let fehlMode=false, rundeMode=false, qBuilt=false;
+const tKey=()=>isoD(today());
+
+/* ---------- Fehlerheft ---------- */
+grade=(function(orig){return function(ok){const k=cIdx;if(k!=null){const f=FE();if(!ok)f[k]={n:((f[k]&&f[k].n)||0)+1,ok:0};else if(f[k]){f[k].ok=(f[k].ok||0)+1;if(f[k].ok>=2){delete f[k];ST.fehlWeg=(ST.fehlWeg||0)+1}}}orig(ok)}})(grade);
+exEnd=(function(orig){return function(){
+  if(ex&&!ex.done){const f=FE();ex.qs.forEach((q,i)=>{if(ex.ans[i]!==q.a&&q.k!=null)f[q.k]={n:((f[q.k]&&f[q.k].n)||0)+1,ok:0}});
+    const per={};SG.forEach(g=>{const qs=ex.qs.map((q,i)=>({q,i})).filter(x=>x.q.sg===g.n);per[g.n]=[qs.filter(x=>ex.ans[x.i]===x.q.a).length,qs.length]});
+    const r=ex.qs.filter((q,i)=>ex.ans[i]===q.a).length;ST.exams=(ST.exams||[]).concat([{d:tKey(),per,n:ex.qs.length,r}]).slice(-12);save()}
+  orig()}})(exEnd);
+buildQueue=(function(orig){return function(){
+  if(fehlMode){if(qBuilt){queue=[];return}qBuilt=true;queue=Object.keys(FE()).map(Number).filter(k=>CARDS[k]).sort(()=>Math.random()-.5);return}
+  if(rundeMode){if(qBuilt){queue=[];return}qBuilt=true;const t=tKey(),all=CARDS.map((c,k)=>k);
+    const fe=Object.keys(FE()).map(Number).filter(k=>CARDS[k]).sort(()=>Math.random()-.5).slice(0,3);
+    const due=all.filter(k=>ST.srs[k]&&ST.srs[k].due<=t).sort(()=>Math.random()-.5), fr=all.filter(k=>!ST.srs[k]).sort(()=>Math.random()-.5);
+    queue=[...new Set([...fe,...due,...fr])].slice(0,10);return}
+  orig()}})(buildQueue);
+karten=(function(orig){return function(){orig();
+  if(cIdx!=null||queue.length)return;
+  if(rundeMode)return rundeEnde();
+  if(fehlMode)$("#lz").innerHTML=`<section class="card" style="text-align:center;padding:28px 18px;gap:10px"><span class="score">${BRUCH("var(--richtig)",44)}</span><span class="h2 fr" style="font-size:28px">${Object.keys(FE()).length?"Für heute durch":"Fehlerheft leer"}</span><p class="muted" style="margin:0">${Object.keys(FE()).length?`Noch ${Object.keys(FE()).length} Karten im Heft. Eine Karte verlässt das Heft, wenn du sie zweimal hintereinander gewusst hast.`:"Alles, was du falsch hattest, sitzt jetzt. Sauber."}</p></section>`;
+}})(karten);
+
+/* ---------- Tagesrunde ---------- */
+function frageDesTages(){return Q[Math.floor(today()/864e5)%Q.length]}
+function rundeEnde(){
+  const q=frageDesTages(), done=(ST.runde||{})[tKey()];
+  $("#lz").innerHTML=`<section class="card" style="gap:12px"><span class="eyebrow" style="color:var(--messing)">Frage des Tages · ${q.m}</span>
+   <p style="margin:0">${q.scene}</p><span class="h2" style="font-size:20px">${q.q}</span>
+   <div style="display:grid;gap:8px">${q.o.map((o,i)=>`<button class="opt" data-o="${i}">${o}</button>`).join("")}</div><div id="fdt"></div></section>`;
+  const fin=ok=>{ST.runde=ST.runde||{};ST.runde[tKey()]=ok?2:1;markDay();save();
+    $("#fdt").innerHTML=`<div class="glas-in" style="margin-top:4px"><span class="h2 ${ok?"ok fr":"no"}" style="font-size:${ok?26:20}px">${ok?BRUCH("var(--richtig)",20)+" Waidmannsheil":"Knapp daneben"}</span><p style="margin:0">${q.x}</p></div>
+    <p class="data" style="margin:6px 0 0">Tagesrunde erledigt. Morgen gibt es die nächste.</p><button class="btn full" id="rz2">Zur Startseite</button>`;
+    $("#rz2").onclick=()=>{rundeMode=false;qBuilt=false;lernView="menu";go("heute")}};
+  on("#lz .opt","click",e=>{const i=+e.currentTarget.dataset.o;document.querySelectorAll("#lz .opt").forEach(b=>{b.disabled=true;if(+b.dataset.o===q.a)b.classList.add("right");else if(+b.dataset.o===i)b.classList.add("wrong")});vib(i===q.a?[10,30,10]:40);fin(i===q.a)});
+  if(done){const b=document.querySelector(`#lz .opt[data-o="${q.a}"]`);if(b){document.querySelectorAll("#lz .opt").forEach(x=>x.disabled=true);b.classList.add("right");$("#fdt").innerHTML=`<p class="muted" style="margin:0">${q.x}</p>`}}
+}
+function startRunde(){rundeMode=true;fehlMode=false;qBuilt=false;sgFilter=0;deck="Alle";queue=[];cIdx=null;lernView="karten";go("lernen")}
+function startFehler(){fehlMode=true;rundeMode=false;qBuilt=false;sgFilter=0;deck="Alle";queue=[];cIdx=null;lernView="karten";go("lernen")}
+
+/* ---------- Prüfungsreife ---------- */
+function reife(n){
+  const ids=CARDS.map((c,k)=>k).filter(k=>sgOf(CARDS[k])===n), f=FE();let s=0;
+  ids.forEach(k=>{const r=ST.srs[k];if(!r)return;s+=r.box>=4?1:r.box===3?.85:r.box===2?.5:.15;if(f[k])s-=.1});
+  const c=ids.length?Math.max(0,s)/ids.length:0;
+  const ex=(ST.exams||[]).slice(-3).map(e=>e.per&&e.per[n]).filter(x=>x&&x[1]);let e=null;
+  if(ex.length){e=ex.reduce((a,x)=>a+x[0],0)/ex.reduce((a,x)=>a+x[1],0)}
+  const p=e==null?c:c*.6+e*.4;
+  const gaps=ids.filter(k=>!ST.srs[k]||ST.srs[k].box<3).sort((a,b)=>((f[b]||{}).n||0)-((f[a]||{}).n||0)||((ST.srs[b]?1:0)-(ST.srs[a]?1:0)));
+  return {p,c,e,gaps,n:ids.length};
+}
+function reifeGesamt(){const r=SG.map(g=>reife(g.n));const p=r.reduce((a,x)=>a+x.p,0)/r.length;return {p,r,min:Math.min(...r.map(x=>x.p))}}
+function ring(p,size=96,col="var(--messing)"){const R=size/2-7,C=2*Math.PI*R;return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="var(--line)" stroke-width="7"/><circle cx="${size/2}" cy="${size/2}" r="${R}" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 ${size/2} ${size/2})"/></svg>`}
+function reifeHTML(){
+  const g=reifeGesamt(), pct=Math.round(g.p*100), ready=g.p>=.8&&g.min>=.7, weak=SG[g.r.indexOf(g.r.reduce((a,x)=>x.p<a.p?x:a))];
+  return `<section class="card reife" style="gap:14px"><div class="row" style="gap:16px;flex-wrap:nowrap;align-items:center">
+   <div class="ringwrap">${ring(g.p,96,ready?"var(--richtig)":"var(--messing)")}<span class="ringnum">${pct}<small>%</small></span></div>
+   <div style="display:grid;gap:4px;min-width:0"><span class="eyebrow">Prüfungsreife</span><span class="h2 ${ready?"ok fr":""}" style="font-size:${ready?26:21}px">${ready?"Prüfungsreif":pct<25?"Am Anfang":"Noch nicht prüfungsreif"}</span>
+   <span class="muted" style="font-size:14px">${ready?"Alle Sachgebiete über 70 %. Jetzt einen vollen Bogen schreiben.":`Größte Lücke: ${weak.t}`}</span></div></div>
+   <div class="reifelist">${SG.map((s,i)=>{const r=g.r[i],pp=Math.round(r.p*100);return `<details class="rf"><summary><span class="rfn">${s.n}</span><span class="rft">${s.s}</span><span class="bar"><i style="width:${pp}%;background:${pp>=80?"var(--richtig)":pp>=50?"var(--messing)":"var(--falsch)"}"></i></span><span class="rfp">${pp} %</span></summary>
+    <div class="rfd">${r.gaps.length?`<span class="data">Lücken, zuerst die aus dem Fehlerheft</span><ul>${r.gaps.slice(0,4).map(k=>`<li>${CARDS[k][1]}${FE()[k]?` <span class="tagf">${FE()[k].n}× falsch</span>`:""}</li>`).join("")}</ul>`:`<span class="data">Keine Lücken.</span>`}
+    <button class="btn ghost" data-sgo="${s.n}">Sachgebiet ${s.n} üben</button>${r.e!=null?`<span class="data">Prüfungsbögen: ${Math.round(r.e*100)} % richtig</span>`:""}</div></details>`}).join("")}</div>
+   <p class="data" style="margin:0">Aus Karteikasten (60 %) und deinen letzten Prüfungsbögen (40 %). Eine Schätzung, kein amtliches Ergebnis.</p></section>`;
+}
+vLernen=(function(orig){return function(){
+  if(lernView==="menu"){fehlMode=false;rundeMode=false;qBuilt=false}
+  orig();
+  if(lernView==="karten"&&(fehlMode||rundeMode)){const h=document.querySelector("#view .h");if(h)h.textContent=fehlMode?"Fehlerheft":"Tagesrunde";const p=document.querySelector("#view .screen > p.muted");if(p)p.remove();
+    const back=$("#back");if(back)back.addEventListener("click",()=>{fehlMode=false;rundeMode=false;qBuilt=false})}
+  if(lernView!=="menu")return;
+  const lede=document.querySelector("#view .lede");if(lede)lede.insertAdjacentHTML("afterend",reifeHTML());
+  const nF=Object.keys(FE()).length, rd=(ST.runde||{})[tKey()];
+  const mehr=[...document.querySelectorAll("#view .sec")].find(h=>h.textContent==="Mehr");
+  if(mehr){const reg=mehr.nextElementSibling;reg.insertAdjacentHTML("afterbegin",`<button class="reg" id="lrunde"><span class="num" style="font-size:30px">${rd?BRUCH("var(--richtig)",28):"5′"}</span><span class="txt"><span class="h2" style="font-size:19px">Tagesrunde</span><span class="muted">${rd?"Heute erledigt":"10 Karten und die Frage des Tages"}</span></span><span class="arr">→</span></button>
+    <button class="reg" id="lfehl"><span class="num" style="font-size:30px;color:${nF?"var(--falsch)":"var(--richtig)"}">${nF}</span><span class="txt"><span class="h2" style="font-size:19px">Fehlerheft</span><span class="muted">${nF?"Alles, was du falsch hattest":"Leer, sauber"}</span></span><span class="arr">→</span></button>`)}
+  const r=$("#lrunde");if(r)r.onclick=()=>{vib(8);startRunde()};const f=$("#lfehl");if(f)f.onclick=()=>{vib(8);startFehler()};
+  on("[data-sgo]","click",e=>{sgFilter=+e.currentTarget.dataset.sgo;deck="Alle";queue=[];cIdx=null;lernView="karten";vib(8);vLernen();window.scrollTo({top:0})});
+}})(vLernen);
+VIEWS.lernen=vLernen;
+
+/* ---------- Rang & Abzeichen ---------- */
+const RAENGE=[[0,"Jagdscheinanwärter"],[60,"Jungjäger"],[180,"Jäger"],[400,"Waidmann"],[750,"Revierjäger"],[1300,"Hegeringleiter"],[2200,"Jagdkönig"]];
+function maxSerie(){const ks=Object.keys(ST.days||{}).sort();let best=0,run=0,prev=null;ks.forEach(k=>{const d=new Date(k+"T12:00");run=prev&&(d-prev)/864e5<1.5?run+1:1;best=Math.max(best,run);prev=d});return best}
+function punkte(){const known=Object.values(ST.srs||{}).filter(s=>s.box>=3).length, days=Object.keys(ST.days||{}).length, j=(ST.journal||[]).length, ex=(ST.exams||[]).length, rn=Object.keys(ST.runde||{}).length;
+  return known*3+days*6+Math.round((ST.azBest||0)/10)+j*8+ex*15+rn*4+(ST.fehlWeg||0)*2}
+function rang(){const p=punkte();let i=0;while(i<RAENGE.length-1&&p>=RAENGE[i+1][0])i++;const nx=RAENGE[i+1];return {p,name:RAENGE[i][1],i,next:nx?nx[1]:null,need:nx?nx[0]-p:0,frac:nx?(p-RAENGE[i][0])/(nx[0]-RAENGE[i][0]):1}}
+function abzeichen(){const known=Object.values(ST.srs||{}).filter(s=>s.box>=3).length, j=ST.journal||[], ex=ST.exams||[];
+  return [["Erster Bruch","Die erste Karte sitzt",known>=1],["Fleißig","7 Tage Serie",maxSerie()>=7],["Standhaft","30 Tage Serie",maxSerie()>=30],
+   ["Halbzeit",`${Math.ceil(CARDS.length/2)} Karten sitzen`,known>=Math.ceil(CARDS.length/2)],["Alles im Kasten","Alle Karten sitzen",known>=CARDS.length],
+   ["Prüfling","Einen Prüfungsbogen mit 80 % bestanden",ex.some(e=>e.r/e.n>=.8)],["Bogen voll","Vollen Bogen (100) mit 80 % bestanden",ex.some(e=>e.n>=100&&e.r/e.n>=.8)],
+   ["Sauberes Heft","10 Karten aus dem Fehlerheft geholt",(ST.fehlWeg||0)>=10],["Ruhige Hand","400 Punkte im Ansitz-Simulator",(ST.azBest||0)>=400],
+   ["Sitzfleisch","10 Ansitze im Tagebuch",j.length>=10],["Strecke","Erste Strecke im Tagebuch",j.some(e=>e.strecke)]]}
+
+/* ---------- Persönliche Startseite ---------- */
+function gruss(){const h=new Date().getHours();return h<5?"Gute Nacht":h<11?"Guten Morgen":h<17?"Servus":h<22?"Guten Abend":"Gute Nacht"}
+VIEWS.heute=vHeuteAnsitz=(function(orig){return function(){orig();
+  const scr=document.querySelector("#view .screen");if(!scr)return;
+  const name=typeof SBUSER!=="undefined"&&SBUSER?uName().split(" ")[0]:"", r=rang(), due=dueCount(), rd=(ST.runde||{})[tKey()], g=reifeGesamt();
+  scr.insertAdjacentHTML("afterbegin",`<div class="hello"><span class="eyebrow">${r.name}${r.next?` · noch ${r.need} Punkte bis ${r.next}`:""}</span>
+   <h1 class="h hello-h">${gruss()}${name?", "+esc(name):""}</h1>
+   <div class="hchips"><button class="hchip ${rd?"done":""}" id="hrunde">${rd?BRUCH("var(--richtig)",14)+" Tagesrunde erledigt":"Tagesrunde · 5 Min."}</button>
+   <button class="hchip" data-go="lernen">${due} fällig</button><button class="hchip" data-go="lernen">Reife ${Math.round(g.p*100)} %</button>
+   <button class="hchip" id="hwind" hidden></button></div></div>`);
+  $("#hrunde").onclick=()=>{vib(8);startRunde()};
+  on(".hello [data-go]","click",e=>{vib(8);go(e.currentTarget.dataset.go)});
+  const reg=scr.querySelector(".register");if(reg)reg.insertAdjacentHTML("beforeend",`<button class="reg" id="hdarf"><span class="num" style="font-size:30px">§</span><span class="txt"><span class="h2">Darf ich heute?</span><span class="muted">Jagdzeit, Nachtzeit, Elterntierschutz</span></span><span class="arr">→</span></button>`);
+  $("#hdarf").onclick=()=>{vib(8);go("darf")};
+  windChip();
+}})(vHeuteAnsitz);
+
+/* ---------- Darf ich heute? ---------- */
+const SCHALEN=/^(Rehbock|Schmalreh|Rehgeiß|Rotwild|Dam-|Gamswild|Muffelwild|Schwarzwild)/, FEDER=/^(Fasan|Rebhuhn|Ringel|Stockente|Übrige Enten|Grau- und|Bläss-, Saat|Höckerschwan|Waldschnepfe|Blässhuhn|Möwen|Rabenkrähe|Graureiher)/;
+let darfArt="Rehbock", darfTag=null;
+function mmdd(s){const [m,d]=s.split("-");return `${d}.${m}.`}
+function nextOpen(j,d){if(!j||!j[1]||j[1]==="ganz")return null;for(let i=1;i<370;i++){const x=new Date(d);x.setDate(x.getDate()+i);if(inSeason(j[1],j[2],x))return x}return null}
+function seasonEnd(j,d){if(!j||!j[1]||j[1]==="ganz")return null;for(let i=0;i<370;i++){const x=new Date(d);x.setDate(x.getDate()+i);if(!inSeason(j[1],j[2],x)){x.setDate(x.getDate()-1);return x}}return null}
+function vDarf(){
+  const d=darfTag?new Date(darfTag+"T12:00"):new Date(), j=JZ.find(x=>x[0]===darfArt), st=jzStatus(darfArt,d);
+  const t=dayTimes(), sch=SCHALEN.test(darfArt)&&!/^Schwarzwild/.test(darfArt), fed=FEDER.test(darfArt)&&!/^(Waldschnepfe|Möwen)/.test(darfArt);
+  const nE=t.set?new Date(t.set.getTime()+90*6e4):null, nA=t.rise?new Date(t.rise.getTime()-90*6e4):null;
+  const big=j&&j[1]===null?["Keine Jagdzeit","zu","Ganzjährig geschont."]:st==="ganz"?["Frei","frei","Ganzjährig Jagdzeit."]:st==="frei"?["Frei","frei",`Jagdzeit ${mmdd(j[1])} bis ${mmdd(j[2])}. Noch bis ${seasonEnd(j,d).toLocaleDateString("de-DE",{day:"numeric",month:"long"})}.`]:["Schonzeit","zu",`Jagdzeit ${mmdd(j[1])} bis ${mmdd(j[2])}. Wieder frei ab ${nextOpen(j,d).toLocaleDateString("de-DE",{day:"numeric",month:"long"})}.`];
+  const hint=[];
+  if(big[1]==="frei"&&!/Rabenkrähe|Waschbär|Wildkaninchen/.test(darfArt))hint.push(["Elterntierschutz","Auch bei Jagdzeit dürfen die für die Aufzucht notwendigen Elterntiere bis zum Selbständigwerden der Jungen nicht bejagt werden (§ 22 Abs. 4 BJagdG). Führende Stücke sicher ansprechen."]);
+  if(big[1]==="frei"&&(sch||fed)&&nE&&nA&&!darfTag)hint.push(["Nachtzeit",`${sch?"Schalenwild (außer Schwarzwild)":"Federwild"} darf zur Nachtzeit nicht erlegt werden (§ 19 Abs. 1 Nr. 4 BJagdG). Nachtzeit heute: ab ${hm(nE)} Uhr, morgen bis ${hm(nA)} Uhr.`]);
+  if(/^Schwarzwild/.test(darfArt))hint.push(["Nachtjagd","Schwarzwild darf auch nachts bejagt werden. Für Nachtsicht- und Wärmebildtechnik gelten in Bayern eigene Vorgaben, informier dich vorher bei deiner Jagdbehörde."]);
+  if(/^(Rehbock|Schmalreh|Rehgeiß|Rotwild|Dam-|Gamswild|Muffelwild)/.test(darfArt))hint.push(["Abschussplan","Für Schalenwild außer Schwarzwild gilt grundsätzlich der Abschussplan. Beim Rehwild können Reviere seit 1. April 2026 unter Bedingungen davon abweichen."]);
+  $("#view").innerHTML=`<div class="screen"><button class="back" id="back">← Heute</button><h1 class="h" style="font-size:40px">Darf ich heute?</h1>
+   <section class="card" style="gap:12px"><label class="form"><span class="muted" style="font-size:14px">Wildart</span><select id="dart">${JZ.map(x=>`<option ${x[0]===darfArt?"selected":""}>${x[0]}</option>`).join("")}</select></label>
+   <label class="form"><span class="muted" style="font-size:14px">Tag</span><input type="date" id="dtag" value="${isoD(d)}"></label></section>
+   <section class="card darf ${big[1]}" style="gap:6px"><span class="eyebrow">${d.toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long"})}</span>
+    <span class="darfbig">${big[1]==="frei"?BRUCH("var(--richtig)",34)+" ":""}${big[0]}</span><p style="margin:0">${big[2]}</p></section>
+   ${hint.map(([h,x])=>`<section class="card" style="gap:6px"><span class="h2" style="font-size:18px">${h}</span><p style="margin:0">${x}</p></section>`).join("")}
+   <p class="data" style="margin:0">Jagdzeiten nach § 19 AVBayJG, Stand 1. April 2026. Lernhilfe, keine Rechtsberatung. Maßgeblich sind die amtlichen Texte und örtliche Anordnungen.</p></div>`;
+  $("#back").onclick=()=>go("heute");
+  $("#dart").onchange=e=>{darfArt=e.target.value;vDarf()};$("#dtag").onchange=e=>{darfTag=e.target.value===isoD(new Date())?null:e.target.value;vDarf()};
+}
+VIEWS.darf=vDarf;
+
+/* ---------- Live-Wetter (Bright Sky / DWD) ---------- */
+const WXC={};
+const HOME=()=>{const s=(ST.sitze||[]).filter(x=>x.lat!=null);if(s.length)return [s.reduce((a,x)=>a+x.lat,0)/s.length,s.reduce((a,x)=>a+x.lon,0)/s.length];return ST.home||[47.998,11.340]};
+async function wetter(){const [la,lo]=HOME(),lat=+la.toFixed(2),lon=+lo.toFixed(2),key=lat+","+lon,c=WXC[key];if(c&&Date.now()-c.t<15*6e4)return c.d;
+  const d0=new Date(),d1=new Date(Date.now()+2*864e5),f=x=>isoD(x);
+  const r=await fetch(`https://api.brightsky.dev/weather?lat=${lat}&lon=${lon}&date=${f(d0)}&last_date=${f(d1)}`);if(!r.ok)throw new Error("wx");
+  const j=await r.json();const d=(j.weather||[]).map(w=>({t:new Date(w.timestamp),dir:w.wind_direction,sp:w.wind_speed,gu:w.wind_gust_speed,tmp:w.temperature,pr:w.precipitation,ic:w.icon})).filter(w=>!isNaN(w.t));
+  WXC[key]={t:Date.now(),d};return d}
+const dirOf=(deg,sp)=>sp!=null&&sp<3||deg==null?"still":DIRS[Math.round((((deg%360)+360)%360)/45)%8];
+function wxNow(d){const n=Date.now();return d.reduce((a,w)=>Math.abs(w.t-n)<Math.abs(a.t-n)?w:a,d[0])}
+function wxAt(d,date){return d.reduce((a,w)=>Math.abs(w.t-date)<Math.abs(a.t-date)?w:a,d[0])}
+function ansitzZeit(){const t=dayTimes(),n=new Date();let a=t.set?new Date(t.set.getTime()-60*6e4):null;if(a&&t.set&&n>new Date(t.set.getTime()+45*6e4)){const m=t.rise?new Date(t.rise.getTime()+864e5-30*6e4):null;return {d:m,z:"morgen",l:"morgen früh"}}return {d:a&&a<n?n:a,z:"abend",l:"heute Abend"}}
+const arrow=(deg,s=16)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" style="transform:rotate(${(deg||0)+180}deg);vertical-align:-3px" aria-hidden="true"><path d="M12 3l5 9h-3.5v9h-3v-9H7z" fill="currentColor"/></svg>`;
+async function windChip(){const b=$("#hwind");if(!b)return;try{const d=await wetter(),a=ansitzZeit(),w=wxAt(d,a.d||new Date()),dir=dirOf(w.dir,w.sp);
+  const best=(ST.sitze||[]).map(s=>({s,...sitzScore(s,dir,a.z)})).sort((x,y)=>y.pts-x.pts)[0];
+  b.hidden=false;b.innerHTML=`${arrow(w.dir,13)} ${a.l}: ${dir==="still"?"windstill":dir+" "+Math.round(w.sp)+" km/h"}${best&&best.pts>=1?` · ${esc(best.s.name)}`:""}`;b.onclick=()=>{revMode="planer";go("revier")}}catch(e){}}
+planer=(function(orig){return function(){orig();
+  const card=$("#rz .card");if(!card)return;const note=[...card.querySelectorAll(".data")].find(p=>/Live-Wind/.test(p.textContent));if(note)note.remove();
+  card.insertAdjacentHTML("beforebegin",`<section class="card wx" id="wx" style="gap:10px"><div class="row" style="justify-content:space-between"><span class="h2">Wind im Revier</span><span class="eyebrow">DWD · Bright Sky</span></div><p class="muted" style="margin:0">Lade Wetter …</p></section>`);
+  (async()=>{const el=$("#wx");try{const d=await wetter(),w=wxNow(d),a=ansitzZeit(),wa=wxAt(d,a.d||new Date()),dirA=dirOf(wa.dir,wa.sp),n=Date.now();
+    const next=d.filter(x=>x.t>=n-36e5).slice(0,12);
+    el.innerHTML=`<div class="row" style="justify-content:space-between"><span class="h2">Wind im Revier</span><span class="eyebrow">DWD · Bright Sky</span></div>
+     <div class="wxnow"><span class="wxdir">${arrow(w.dir,30)}</span><div><span class="h2" style="font-size:24px">${dirOf(w.dir,w.sp)==="still"?"Windstill":"aus "+dirOf(w.dir,w.sp)}</span><span class="data" style="display:block">${Math.round(w.sp)} km/h, Böen ${Math.round(w.gu||0)} · ${Math.round(w.tmp)} °C${w.pr?` · ${w.pr} mm Regen`:""}</span></div></div>
+     <div class="wxstrip">${next.map(x=>`<div><span class="data">${String(x.t.getHours()).padStart(2,"0")}</span>${arrow(x.dir,14)}<span class="data">${Math.round(x.sp)}</span></div>`).join("")}</div>
+     ${a.d?`<button class="btn" id="wxuse">Wind für ${a.l} übernehmen: ${dirA==="still"?"windstill":dirA}</button>`:""}
+     <p class="data" style="margin:0">Für ${ST.sitze&&ST.sitze.some(s=>s.lat!=null)?"die Lage deiner Hochsitze":ST.home?"deinen Standort":"Starnberg"}, auf etwa 1 km gerundet. ${ST.sitze&&ST.sitze.some(s=>s.lat!=null)?"":"Setz deine Hochsitze auf der Karte, dann gilt der Wind für dein Revier."}</p>`;
+    const u=$("#wxuse");if(u)u.onclick=()=>{ST.plan={wind:dirA,zeit:a.z};save();vib(8);planer()};
+  }catch(e){el.innerHTML=`<span class="h2">Wind im Revier</span><p class="muted" style="margin:0">Gerade kein Wetter abrufbar. Trag den Wind unten selbst ein.</p>`}})();
+}})(planer);
+
+/* ---------- Karte (Leaflet / OpenStreetMap) ---------- */
+let LFp=null, MAP=null, mapAdd=null;
+function loadLeaflet(){if(LFp)return LFp;const l=document.createElement("link");l.rel="stylesheet";l.href="leaflet.css";document.head.appendChild(l);
+  LFp=new Promise((res,rej)=>{const s=document.createElement("script");s.src="leaflet.js";s.onload=()=>res(window.L);s.onerror=rej;document.head.appendChild(s)});return LFp}
+const POIT={sitz:["Hochsitz","#cda85c"],kirrung:["Kirrung","#e5793a"],wechsel:["Wechsel","#a8b88e"],salz:["Salzlecke","#d9d4c4"]};
+function poiIcon(t,col,label){return L.divIcon({className:"poi",html:`<div class="pin ${t}" style="--c:${col}">${t==="sitz"?`<svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 21l3-11M18 21l-3-11M5 10h14M7 10V5h10v5M9 15h6" stroke="#151a15" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`:""}</div>${label?`<span class="pinl">${esc(label)}</span>`:""}`,iconSize:[30,30],iconAnchor:[15,15]})}
+async function karte(){
+  $("#rz").innerHTML=`<section class="card" style="gap:10px;padding:0;overflow:hidden"><div id="map" class="map"></div></section>
+   <div class="chips" id="addc">${Object.entries(POIT).map(([k,[n]])=>`<button class="chip" data-add="${k}" aria-pressed="false">＋ ${n}</button>`).join("")}<button class="chip" id="mme">◎ Mein Standort</button></div>
+   <p class="muted" id="mhint" style="margin:0">Tipp auf ＋ und dann auf die Karte, um etwas zu setzen. Punkte lassen sich verschieben.</p><div id="mform"></div><div id="mlist"></div>`;
+  let Lf;try{Lf=await loadLeaflet()}catch(e){$("#map").innerHTML=`<p class="muted" style="padding:16px">Karte konnte nicht geladen werden.</p>`;return}
+  if(MAP){MAP.remove();MAP=null}
+  const c=HOME();MAP=Lf.map("map",{zoomControl:true,attributionControl:true}).setView(c,ST.sitze&&ST.sitze.some(s=>s.lat!=null)?15:13);
+  Lf.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende'}).addTo(MAP);
+  let wdir=null;try{const d=await wetter(),a=ansitzZeit(),w=wxAt(d,a.d||new Date());wdir=dirOf(w.dir,w.sp);
+    const ctl=Lf.control({position:"topright"});ctl.onAdd=()=>{const e=Lf.DomUtil.create("div","mapwind");e.innerHTML=`${arrow(w.dir,22)}<span>${wdir==="still"?"still":wdir}</span>`;e.title="Wind "+a.l;return e};ctl.addTo(MAP)}catch(e){}
+  const draw=()=>{MAP.eachLayer(l=>{if(l.options&&l.options.jr)MAP.removeLayer(l)});
+    (ST.sitze||[]).filter(s=>s.lat!=null).forEach(s=>{const sc=wdir?sitzScore(s,wdir,ansitzZeit().z).pts:null,col=sc==null?"#cda85c":sc>=2?"#94c26f":sc>=0?"#cda85c":"#e46a4f";
+      const m=Lf.marker([s.lat,s.lon],{icon:poiIcon("sitz",col,s.name),draggable:true,jr:1}).addTo(MAP);
+      m.on("dragend",()=>{const p=m.getLatLng();s.lat=p.lat;s.lon=p.lng;save()});
+      m.bindPopup(`<b>${esc(s.name)}</b><br>Wild kommt aus ${s.wild}${wdir?`<br>${sitzScore(s,wdir,ansitzZeit().z).why[0]}`:""}<br><button class="lnk" data-dels="${s.id}">Von der Karte nehmen</button>`)});
+    (ST.pois||[]).forEach(p=>{const m=Lf.marker([p.lat,p.lon],{icon:poiIcon(p.t,POIT[p.t][1],p.name||POIT[p.t][0]),draggable:true,jr:1}).addTo(MAP);
+      m.on("dragend",()=>{const q=m.getLatLng();p.lat=q.lat;p.lon=q.lng;save()});m.bindPopup(`<b>${esc(p.name||POIT[p.t][0])}</b><br><button class="lnk" data-delp="${p.id}">Löschen</button>`)});
+    const open=(ST.sitze||[]).filter(s=>s.lat==null);
+    $("#mlist").innerHTML=open.length?`<section class="card" style="gap:8px"><span class="h2" style="font-size:18px">Noch ohne Ort</span>${open.map(s=>`<button class="chip" data-place="${s.id}">${esc(s.name)} auf Karte setzen</button>`).join("")}</section>`:"";
+    on("[data-place]","click",e=>{mapAdd={t:"sitz",id:e.currentTarget.dataset.place};$("#mhint").textContent="Jetzt auf die Karte tippen.";vib(8)})};
+  MAP.on("popupopen",e=>{const el=e.popup.getElement();el.querySelectorAll("[data-dels]").forEach(b=>b.onclick=()=>{const s=ST.sitze.find(x=>x.id===b.dataset.dels);if(s){delete s.lat;delete s.lon;save();MAP.closePopup();draw()}});
+    el.querySelectorAll("[data-delp]").forEach(b=>b.onclick=()=>{ST.pois=(ST.pois||[]).filter(x=>x.id!==b.dataset.delp);save();MAP.closePopup();draw()})});
+  on("[data-add]","click",e=>{const t=e.currentTarget.dataset.add;mapAdd=mapAdd&&mapAdd.t===t?null:{t};document.querySelectorAll("[data-add]").forEach(b=>b.setAttribute("aria-pressed",mapAdd&&b.dataset.add===mapAdd.t));$("#mhint").textContent=mapAdd?"Jetzt auf die Karte tippen.":"Tipp auf ＋ und dann auf die Karte, um etwas zu setzen.";vib(6)});
+  $("#mme").onclick=()=>{if(!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(p=>{ST.home=[p.coords.latitude,p.coords.longitude];save();MAP.setView(ST.home,15)},()=>{$("#mhint").textContent="Standort nicht freigegeben."},{enableHighAccuracy:true,timeout:8000})};
+  MAP.on("click",e=>{if(!mapAdd)return;const {lat,lng}=e.latlng,a=mapAdd;mapAdd=null;document.querySelectorAll("[data-add]").forEach(b=>b.setAttribute("aria-pressed","false"));$("#mhint").textContent="Gesetzt. Zum Verschieben gedrückt halten und ziehen.";
+    if(a.t==="sitz"&&a.id){const s=ST.sitze.find(x=>x.id===a.id);if(s){s.lat=lat;s.lon=lng;save();draw()}return}
+    if(a.t==="sitz"){$("#mform").innerHTML=`<section class="card" style="gap:10px"><span class="h2" style="font-size:18px">Neuer Hochsitz</span><label class="form">Name<input id="nsn" placeholder="z. B. Kanzel am Kleefeld"></label>
+      <div class="row" style="gap:10px;flex-wrap:nowrap"><label class="form" style="flex:1">Wild kommt aus<select id="nsw">${DIRS.map(d=>`<option>${d}</option>`).join("")}</select></label><label class="form" style="flex:1">Lage<select id="nsl"><option value="eben">eben</option><option value="fuss">am Hangfuß</option><option value="oben">oben am Hang</option></select></label></div>
+      <button class="btn full" id="nsok">Hochsitz speichern</button></section>`;
+      $("#nsok").onclick=()=>{ST.sitze=ST.sitze||[];ST.sitze.push({id:Date.now().toString(36),name:$("#nsn").value.trim()||"Hochsitz",wild:$("#nsw").value,lage:$("#nsl").value,lat,lon:lng});save();$("#mform").innerHTML="";draw();vib([10,30,10])};return}
+    ST.pois=ST.pois||[];ST.pois.push({id:Date.now().toString(36),t:a.t,lat,lon:lng});save();draw();vib(8)});
+  draw();setTimeout(()=>MAP&&MAP.invalidateSize(),200);
+}
+function vRevier4(){
+  $("#view").innerHTML=`<div class="screen"><h1 class="h">Revier</h1><div class="seg"><button data-m="planer" aria-pressed="${revMode==="planer"}">Planer</button><button data-m="karte" aria-pressed="${revMode==="karte"}">Karte</button><button data-m="tagebuch" aria-pressed="${revMode==="tagebuch"}">Tagebuch</button><button data-m="missionen" aria-pressed="${revMode==="missionen"}">Missionen</button></div><div id="rz" style="display:grid;gap:14px"></div></div>`;
+  on(".seg button","click",e=>{revMode=e.currentTarget.dataset.m;vRevier4()});
+  if(revMode!=="karte"&&MAP){MAP.remove();MAP=null}
+  revMode==="tagebuch"?tagebuch():revMode==="missionen"?missionen():revMode==="karte"?karte():planer();
+}
+VIEWS.revier=vRevier4;
+
+/* ---------- Jahresstrecke ---------- */
+function jagdjahr(d=new Date()){const y=d.getMonth()<3?d.getFullYear()-1:d.getFullYear();return {y,von:new Date(y,3,1),bis:new Date(y+1,2,31,23,59)}}
+function dauer(z){const m=(z||"").match(/(\d{1,2})[:.](\d{2})\D+(\d{1,2})[:.](\d{2})/);if(!m)return 0;let a=+m[1]*60+ +m[2],b=+m[3]*60+ +m[4];if(b<a)b+=1440;return (b-a)/60}
+tagebuch=(function(orig){return function(){orig();
+  const jj=jagdjahr(), L=(ST.journal||[]).filter(e=>{const d=new Date(e.date+"T12:00");return d>=jj.von&&d<=jj.bis});
+  const h=L.reduce((a,e)=>a+dauer(e.zeit),0), an=L.filter(e=>e.anblick&&e.anblick.trim()).length, str=L.filter(e=>e.strecke&&e.strecke.trim());
+  const mon=Array(12).fill(0);L.forEach(e=>{const m=new Date(e.date+"T12:00").getMonth();mon[(m+9)%12]++});const mx=Math.max(1,...mon);
+  const ML=["A","M","J","J","A","S","O","N","D","J","F","M"];
+  const by={};str.forEach(e=>{const k=e.strecke.trim();by[k]=(by[k]||0)+1});
+  $("#rz").insertAdjacentHTML("afterbegin",`<section class="card strecke" style="gap:12px"><div class="row" style="justify-content:space-between"><span class="h2">Jagdjahr ${jj.y}/${String(jj.y+1).slice(2)}</span><span class="eyebrow">1. April bis 31. März</span></div>
+   <div class="stats"><div><span class="score" style="font-size:34px">${L.length}</span><span class="data">Ansitze</span></div><div><span class="score" style="font-size:34px">${h?Math.round(h):"–"}</span><span class="data">Stunden</span></div><div><span class="score" style="font-size:34px">${L.length?Math.round(an/L.length*100)+"%":"–"}</span><span class="data">mit Anblick</span></div><div><span class="score" style="font-size:34px">${str.length}</span><span class="data">Strecke</span></div></div>
+   <svg viewBox="0 0 240 64" class="mbars" aria-label="Ansitze pro Monat">${mon.map((v,i)=>`<rect x="${i*20+4}" y="${50-v/mx*44}" width="12" height="${Math.max(1,v/mx*44)}" rx="2" fill="${v?"var(--messing)":"var(--line)"}"/><text x="${i*20+10}" y="62" text-anchor="middle">${ML[i]}</text>`).join("")}</svg>
+   ${str.length?`<div class="chips">${Object.entries(by).map(([k,v])=>`<span class="chip" style="cursor:default">${BRUCH("var(--messing)",13)} ${esc(k)}${v>1?" × "+v:""}</span>`).join("")}</div>`:`<p class="muted" style="margin:0">Noch keine Strecke in diesem Jagdjahr. Waidmannsheil für den nächsten Ansitz.</p>`}</section>`);
+}})(tagebuch);
+
+/* ---------- Konto: Rang & Abzeichen ---------- */
+vKonto=(function(orig){return function(){orig();if(typeof SBUSER==="undefined"||!SBUSER)return;const kid=document.querySelector(".konto .kid");if(!kid)return;const r=rang(),ab=abzeichen();
+  kid.insertAdjacentHTML("afterend",`<section class="card" style="gap:10px"><div class="row" style="justify-content:space-between;align-items:baseline"><span class="h2 fr" style="font-size:26px;color:var(--messing)">${r.name}</span><span class="data">${r.p} Punkte</span></div>
+   <span class="bar"><i style="width:${Math.round(r.frac*100)}%"></i></span><span class="muted" style="font-size:14px">${r.next?`Noch ${r.need} Punkte bis ${r.next}. Punkte gibt es für sitzende Karten, Lerntage, Tagesrunden, Prüfungsbögen, Tagebuch und den Ansitz.`:"Höchster Rang erreicht. Waidmannsheil!"}</span>
+   <div class="badges">${ab.map(([n,d,ok])=>`<div class="badge2 ${ok?"on":""}" title="${d}">${BRUCH(ok?"var(--messing)":"var(--line)",26)}<b>${n}</b><span>${d}</span></div>`).join("")}</div></section>`)}})(vKonto);
+VIEWS.konto=()=>vKonto();
+
+/* ---------- Wildbret ---------- */
+const WILDBRET=[
+ ["Vor dem Schuss","Schon beim Ansprechen auf Auffälligkeiten achten: abgekommenes Stück, Lahmen, Benommenheit, fehlende Scheu. Solche Merkmale können auf eine Krankheit hinweisen. Bei Verdacht das Stück nach dem Erlegen nicht als Lebensmittel verwenden und die Behörde bzw. den Tierarzt einbinden."],
+ ["Aufbrechen","Möglichst bald nach dem Erlegen. Saubere Unterlage, Einweghandschuhe, scharfes, sauberes Messer.<ol><li>Stück in Rückenlage, Bauchdecke vom Schloss Richtung Brustbein öffnen, ohne Pansen und Gescheide zu verletzen.</li><li>Drossel und Schlund lösen, Schlund verknoten, damit kein Panseninhalt austritt.</li><li>Brustraum öffnen, Zwerchfell lösen, Geräusch (Herz, Lunge, Leber) und Gescheide entnehmen. Blase und Weidloch so lösen, dass nichts ausläuft.</li><li>Organe ansehen: Leber, Lunge, Milz, Nieren, Lymphknoten. Veränderungen wie Abszesse, Knoten, Verfärbungen notieren.</li><li>Stück ausschweißen lassen, Bauchhöhle aufsperren, damit Luft zirkuliert.</li></ol>"],
+ ["Kühlkette","Wildbret muss nach dem Aufbrechen zügig und gleichmäßig auskühlen. Zielwerte: Großwild höchstens +7 °C, Kleinwild höchstens +4 °C (VO (EG) Nr. 853/2004). Nicht in der Sonne liegen lassen, nicht in Plastik verpacken, solange es noch warm ist. Die Kühlkette nicht unterbrechen."],
+ ["Trichinen","Schwarzwild und Dachs müssen auf Trichinen untersucht werden, bevor das Fleisch gegessen wird, auch im eigenen Haushalt. Die Probe nimmt ein amtlicher oder beauftragter Trichinenprobenehmer, das Stück wird gekennzeichnet. Bis zum Befund nicht zerwirken und abgeben."],
+ ["Radiocäsium","In Teilen Südbayerns ist Schwarzwild bis heute durch Tschernobyl mit Cäsium-137 belastet. Für das Inverkehrbringen gilt ein Grenzwert von 600 Becquerel pro Kilogramm. Messstellen der Jägerschaft messen Proben, frag in deiner Kreisgruppe nach."],
+ ["Abgeben und Vermarkten","Als Jäger darfst du kleine Mengen Wild direkt an Verbraucher oder den örtlichen Einzelhandel abgeben, wenn du als kundige Person geschult bist. Wichtig sind Kühlung, Sauberkeit und die Rückverfolgbarkeit: wann, wo, welches Stück, wer hat es erlegt."]];
+vWissen=(function(orig){return function(){orig();const w=$("#refwrap");if(!w)return;
+  w.insertAdjacentHTML("beforebegin",`<section class="card" style="gap:10px"><div class="row" style="justify-content:space-between"><span class="h2">Wildbret</span><span class="eyebrow">Vom Schuss zur Küche</span></div>
+   ${WILDBRET.map(([t,x],i)=>`<details class="wb"><summary><span class="rfn">${i+1}</span><span>${t}</span></summary><div class="wbd">${x}</div></details>`).join("")}
+   <p class="data" style="margin:0">Überblick fürs Lernen. Verbindlich sind das Lebensmittelhygienerecht und die Vorgaben deines Veterinäramts.</p></section>`)}})(vWissen);
+VIEWS.wissen=vWissen;
+
+/* ---------- 2D-Rückfall für neue Wildarten ---------- */
+SIL.alttier=SIL.alttier||SIL.geiss;SIL.hirsch=SIL.hirsch||SIL.bock;
+
+/* ---------- Neue Ansitz-Situationen ---------- */
+SCN.push(
+ {id:"geiss_spaet",title:"Eine Geiß tritt allein auf die Wiese",an:[{k:"geiss",x:200,y:358,s:1.3,d:"Weibliches Reh, kein Gehörn, äst ruhig. Ein Kitz ist bisher nicht zu sehen."},{k:"geiss",x:110,y:356,s:.8,role:"kitz",wait:9,d:"Kitz, kommt spät aus der Dickung nach und hält sich an die Geiß."}],
+  eval:(t,date)=>{const f=jzStatus("Rehgeiß und Kitz",date)!=="zu";if(!f)return t==null?["ok","Richtig, Geiß und Kitz haben heute Schonzeit."]:["no","Schonzeit. Geiß und Kitz sind in Bayern erst ab 1. September frei."];
+   if(t===0)return ["no","Gefehlt. Die Geiß führte, das Kitz kam aus der Dickung nach. Bei einer einzelnen Geiß lange beobachten, und immer Kitz vor Geiß."];if(t===1)return ["ok","Geduldig gewartet und Kitz vor Geiß. Genau so."];return ["half","Kein Fehler. Geduld war richtig, das Kitz wäre frei gewesen."]}},
+ {id:"rotwild",title:"Rotwild zieht auf die Wiese",an:[{k:"alttier",x:150,y:356,s:1,d:"Alttier: großes weibliches Stück, langer Kopf, führt ein Kalb."},{k:"alttier",role:"kalb",x:210,y:360,s:1,d:"Kalb: deutlich kleiner, kurzer Kopf, hält sich eng ans Alttier."}],
+  eval:(t,date)=>{const f=jzStatus("Rotwild Hirsch/Alttier/Kalb",date)!=="zu";if(!f)return t==null?["ok","Richtig, Rotwild hat heute Schonzeit."]:["no","Schonzeit. Alttier und Kalb haben in Bayern vom 1. August bis 31. Januar Jagdzeit."];
+   if(t===1)return ["ok","Waidmannsheil. Kalb vor Alttier. Abschussplan und Rotwildgebiet beachten."];if(t===0)return ["no","Gefehlt. Erst das Kalb, dann das Alttier, sonst verwaist das Kalb."];return ["half","Kein Fehler, aber das Kalb war frei."]}},
+ {id:"nacht",night:true,title:"Nacht. Im Wärmebild Sauen auf der Wiese",an:[{k:"sau",x:140,y:358,s:1.2,d:"Große, massige Sau. Kleine Stücke drängen sich an sie: führende Bache."},{k:"frischling",x:198,y:362,s:1.3,role:"fr",d:"Frischling, klein, hält sich an die Bache."},{k:"sau",x:310,y:356,s:1,role:"ueb",d:"Mittelgroße Sau, allein, ohne Anhang: Überläufer."}],
+  eval:t=>t===0?["no","Fehler mit Folgen: führende Bache. Elterntierschutz nach § 22 Abs. 4 BJagdG, die Frischlinge sind sonst verwaist."]:t!=null?["ok","Waidmannsheil. Nachts mit Wärmebild besonders sorgfältig ansprechen und kurze Schussentfernung wählen."]:["half","Kein Fehler, aber Frischling und Überläufer waren frei."]},
+ {id:"nebel",fog:true,title:"Nebel am Waldrand",an:[{k:"sau",x:225,y:356,s:1.1,d:"Ein dunkles Stück im Nebel. Nur Umrisse. Art, Geschlecht und Hintergrund nicht sicher zu erkennen."}],
+  eval:t=>t===0?["no","Nicht sicher angesprochen. Was du nicht sicher erkennst, beschießt du nicht."]:["ok","Richtig. Im Nebel ohne sicheres Ansprechen kein Schuss."]}
+);
+
+/*EXT4-END*/
 /* ================= Start ================= */
 lsLoad(); streak();
 let startTab="heute"; try{startTab=localStorage.getItem(LS+"-tab")||"heute"}catch(e){}

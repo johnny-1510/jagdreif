@@ -80,7 +80,9 @@ function makeAnimal(k,role){
   else if(k==="sau")a=quad({L:1.3,R:.3,h:1.15,w:.78,leg:.3,legR:.055,col:"#4a4038",neck:.18,neckR:.2,headR:.2,headL:.62,snout:true,ears:.11,earR:.06,tail:.25,tailR:.025,tailUp:1.2,neckUp:1.2,neckDown:1.75,hz:1.9,stride:.45});
   else if(k==="frischling")a=quad({L:.62,R:.15,h:1.1,w:.85,leg:.18,legR:.035,col:"#5a4532",map:TEX.fr,neck:.08,neckR:.1,headR:.1,headL:.3,snout:true,ears:.06,earR:.035,tail:.12,tailR:.015,tailUp:1.2,neckUp:1.25,neckDown:1.7,hz:2.6});
   else if(k==="fuchs")a=quad({L:.68,R:.12,h:1.05,leg:.3,legR:.025,col:"#b5651d",legCol:"#2a1d16",neck:.18,neckR:.07,headR:.09,headL:.28,snout:true,ears:.1,earR:.04,tail:.5,tailR:.09,tailUp:.25,tailTip:true,neckUp:.7,neckDown:1.6,hz:2.2});
+  else if(k==="alttier"){a=quad({L:1.95,R:.4,h:1.1,leg:.74,legR:.085,col:"#7a5a40",legCol:"#5a4230",neck:.7,neckR:.15,headR:.17,headL:.5,ears:.2,earR:.07,spiegel:true,neckUp:.45,neckDown:2.1,hz:1.2,stride:.5});if(role==="kalb")a.g.scale.setScalar(.62)}
   else a=quad({L:.78,R:.19,h:.9,w:1.35,leg:.14,legR:.04,col:"#8b8a84",legCol:"#1d1d1d",neck:.05,neckR:.12,headR:.12,headL:.34,snout:true,headMap:TEX.dachs,ears:.04,earR:.03,tail:.12,tailR:.04,tailUp:.6,neckUp:1.3,neckDown:1.6,hz:2.4});
+  if(k==="sau"&&role==="ueb")a.g.scale.setScalar(.78);
   return a;
 }
 
@@ -168,15 +170,15 @@ function World(){
 
   function gy(x,z){let h=H(x,z);if(hill.visible){const dx=(x+62)/42,dz=(z-120)/34,r=dx*dx+dz*dz;if(r<1)h=Math.max(h,-1+30*Math.pow(Math.sqrt(1-r),1.6))}return h}
   /* ---------- Zustand ---------- */
-  let aim=null, canvasHost=null, raf=0, last=0, yaw=0, pitch=-.12, fov0=50, fovT=50, glass=false, beasts=[], onPick=null, prog=0, baseEl=0, sunAz=240, gyro=null, gyro0=null, sel=-1;
+  let thermal=false, fogMode=null, aim=null, canvasHost=null, raf=0, last=0, yaw=0, pitch=-.12, fov0=50, fovT=50, glass=false, beasts=[], onPick=null, prog=0, baseEl=0, sunAz=240, gyro=null, gyro0=null, sel=-1;
   const ray=new T.Raycaster(), ndc=new T.Vector2();
   function resize(){if(!canvasHost)return;const w=canvasHost.clientWidth,h=canvasHost.clientHeight;if(!w||!h)return;R.setSize(w,h,false);cam.aspect=w/h;fov0=cam.aspect<.8?58:cam.aspect<1.3?52:44;if(!glass)fovT=fov0;cam.updateProjectionMatrix()}
   function light(){const el=baseEl-prog*4.5, k=skyAt(el), sv=sunVec(sunAz,el);
     skyU.top.value.copy(k.top);skyU.hor.value.copy(k.hor);skyU.glow.value.copy(k.glow);skyU.amt.value=k.amt;skyU.sunDir.value.copy(sv);skyU.sunVis.value=el>-1?1:0;
-    const fc=k.hor.clone().lerp(k.top,.35);S.fog.color.copy(fc);R.setClearColor(fc);
+    const fc=k.hor.clone().lerp(k.top,.35);if(fogMode)fc.lerp(new T.Color("#9ea4a6"),fogMode==="dicht"?.7:.45).multiplyScalar(.45+clamp((el+6)/14,0,1)*.6);S.fog.color.copy(fc);R.setClearColor(fc);
     const day=clamp((el+6)/14,0,1);sun.intensity=clamp((el+3)/8,0,1)*2.8;sun.color.copy(new T.Color("#ffb070").lerp(new T.Color("#fff3dc"),clamp(el/15,0,1)));
     sun.position.copy(sv).multiplyScalar(300);hemi.intensity=.55+day*1.25;hemi.color.copy(k.top).lerp(new T.Color("#ffffff"),.35);hemi.groundColor.set(0x2a2418);
-    stars.material.opacity=clamp((-el-5)/6,0,1)*.9;R.toneMappingExposure=1.05+day*.45;
+    stars.material.opacity=fogMode?0:clamp((-el-5)/6,0,1)*.9;if(thermal){hemi.intensity=2.2;hemi.color.set(0xffffff);sun.intensity=0;R.toneMappingExposure=1.4}R.toneMappingExposure=1.05+day*.45;
     const haze=k.hor.clone(),fa=fore.material,aa=alps.material;aa.color.copy(new T.Color(1,1,1).lerp(haze,.45));fa.color.copy(new T.Color(.8,.8,.8).lerp(haze,.25).multiplyScalar(.55+day*.5));aa.color.multiplyScalar(.5+day*.55)}
   function loop(now){raf=requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000||0);last=now;uT.value=now/1000;
     if(gyro&&gyro0!=null){yaw=clamp(-(gyro.a-gyro0.a)*PI/180,-1.4,1.4);pitch=clamp((gyro.b-gyro0.b)*PI/180*.8-.12,-.35,.25)}
@@ -190,7 +192,7 @@ function World(){
   function pm(e){if(!down||gyro)return;const k=(cam.fov/fov0)*.0055;yaw=clamp(down.yaw+(e.clientX-down.x)*k,-1.5,1.5);pitch=clamp(down.pitch+(e.clientY-down.y)*k,-.38,.28)}
   function pu(e){if(!down)return;const moved=Math.hypot(e.clientX-down.x,e.clientY-down.y),dt=performance.now()-down.t;down=null;if(moved<8&&dt<500)pick(e)}
   function pick(e){if(!onPick)return;const r=R.domElement.getBoundingClientRect();ndc.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(ndc,cam);
-    const hits=ray.intersectObjects(beasts.filter(b=>b.alive).map(b=>b.hit),false);if(hits.length){const i=hits[0].object.userData.i;select(i);onPick(i)}}
+    const hits=ray.intersectObjects(beasts.filter(b=>b.alive&&b.vis()).map(b=>b.hit),false);if(hits.length){const i=hits[0].object.userData.i;select(i);onPick(i)}}
   function select(i){sel=i;beasts.forEach((b,j)=>b.mark(j===i))}
   R.domElement.style.touchAction="none";R.domElement.addEventListener("pointerdown",pd);R.domElement.addEventListener("pointermove",pm);R.domElement.addEventListener("pointerup",pu);R.domElement.addEventListener("pointercancel",()=>down=null);
   const onOri=e=>{if(e.alpha==null)return;gyro={a:e.alpha,b:e.beta};if(gyro0==null)gyro0={a:e.alpha,b:e.beta}};
@@ -202,11 +204,13 @@ function World(){
     m.g.position.copy(tgt.start);S.add(m.g);
     const hit=new T.Mesh(new T.SphereGeometry(Math.max(1.6,m.height*1.3),8,6),new T.MeshBasicMaterial({visible:false}));hit.userData.i=i;hit.position.y=m.height*.5;m.g.add(hit);
     const ring=new T.Mesh(new T.RingGeometry(.9,1.05,32),new T.MeshBasicMaterial({color:0xcda85c,transparent:true,opacity:.0,side:T.DoubleSide,depthWrite:false,fog:false}));ring.rotation.x=-PI/2;ring.position.y=.06;ring.scale.setScalar(Math.max(.8,m.height*.9));m.g.add(ring);
-    let born=performance.now()/1000,mode="in",t=0,ph=rnd()*6,head=0,from=tgt.start.clone(),to=tgt.pos.clone(),dur=tgt.dur,face=tgt.face,fallT=0,grazeT=rnd()*4;
-    const B={hit,alive:true,k,pos:()=>m.g.visible?m.g.position:null,
+    let born=performance.now()/1000+(a.wait||0),mode="in",t=0,ph=rnd()*6,head=0,from=tgt.start.clone(),to=tgt.pos.clone(),dur=tgt.dur,face=tgt.face,fallT=0,grazeT=rnd()*4;
+    if(a.wait)m.g.visible=false;
+    if(thermal)m.g.traverse(o=>{if(o.isMesh&&o.material&&o.material.emissive){o.material.emissive.set(0xffffff);o.material.emissiveIntensity=1.1}});
+    const B={hit,alive:true,k,pos:()=>m.g.visible?m.g.position:null,vis:()=>m.g.visible,
       mark(on){ring.material.opacity=on?.85:0},
       update(dt,time){t+=dt;let moving=false,spd=0;
-        if(mode==="in"){const p=Math.min(1,(time-born)/dur),e=1-Math.pow(1-p,2);m.g.position.lerpVectors(from,to,e);m.g.position.y=gy(m.g.position.x,m.g.position.z);
+        if(mode==="in"){if(time<born){m.g.visible=false;return}m.g.visible=true;const p=Math.min(1,(time-born)/dur),e=1-Math.pow(1-p,2);m.g.position.lerpVectors(from,to,e);m.g.position.y=gy(m.g.position.x,m.g.position.z);
           const dir=Math.atan2(to.x-from.x,to.z-from.z);m.g.rotation.y=dir;moving=p<1;spd=1;if(p>=1){mode="stand";t=0}}
         else if(mode==="stand"){const d=face-m.g.rotation.y;m.g.rotation.y+=d*Math.min(1,dt*2);grazeT+=dt;
           const g=m.human?0:(Math.sin(grazeT*.55)>.1?1:0);head+= (g-head)*Math.min(1,dt*1.8);moving=Math.abs(d)>.05;spd=.4}
@@ -237,7 +241,9 @@ function World(){
     attach(host){canvasHost=host;host.prepend(R.domElement);R.domElement.className="az3d";resize();requestAnimationFrame(resize);if(!raf){last=performance.now();raf=requestAnimationFrame(loop)}},
     scene(sc,date,cb){beasts.forEach(b=>b.dispose());beasts=[];onPick=cb;sel=-1;prog=0;glass=false;fovT=fov0;yaw=0;pitch=-.12;
       const sp=window.sunPos(date);baseEl=sp.el;sunAz=sp.az;hill.visible=sc.id==="kuppe";path.visible=sc.id==="mensch";if(sc.id==="mensch"){path.position.set(0,H(0,150)+.05,150)}
-      seed=Math.floor(Math.random()*1e6)+1;beasts=sc.an.map((a,i)=>beast(a,i,sc));light()},
+      thermal=!!sc.night;fogMode=sc.fog?"dicht":(!sc.night&&Math.random()<.22?"leicht":null);R.domElement.classList.toggle("thermal",thermal);
+      S.fog.near=fogMode==="dicht"?4:fogMode?25:60;S.fog.far=fogMode==="dicht"?75:fogMode?300:1400;alps.visible=fore.visible=!fogMode;
+      seed=Math.floor(Math.random()*1e6)+1;beasts=sc.an.map((a,i)=>beast(a,i,sc));light();return {fog:fogMode,night:thermal}},
     progress(p){prog=p;light()},
     glass(on){glass=on==null?!glass:on;fovT=glass?fov0/4.5:fov0;
       if(glass&&!gyro){const al=beasts.filter(b=>b.alive&&b.pos());if(al.length){const c=new T.Vector3();al.forEach(b=>c.add(b.pos()));c.divideScalar(al.length);c.y+=.5;
