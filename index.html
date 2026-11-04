@@ -229,6 +229,16 @@ ol.steps{margin:0;padding:0;list-style:none;display:grid;gap:2px}
 .tp #organs{transition:opacity .5s}
 .ask{border-top:2px solid var(--messing)}
 .ask textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:10px;width:100%}
+#gate{position:fixed;inset:0;z-index:100;background:radial-gradient(120% 80% at 50% 0%,#232c22,var(--ground));display:grid;place-items:center;padding:24px 16px;overflow:auto}
+#gate .gbox{width:100%;max-width:380px;display:grid;gap:14px;text-align:center;justify-items:center}
+#gate svg{width:84px;height:84px}
+#gate h1{font-family:var(--display);font-size:38px;margin:0;letter-spacing:.01em}
+#gate p{margin:0;color:var(--muted)}
+#gate form{display:grid;gap:10px;width:100%}
+#gate input{font:inherit;font-size:17px;color:var(--ink);background:var(--raised);border:1px solid var(--line);border-radius:var(--r-m);padding:13px 14px;width:100%;box-sizing:border-box}
+#gate input:focus{outline:2px solid var(--messing);outline-offset:1px}
+#gate .gmsg{min-height:1.5em;color:var(--ink)}
+#gate .gfoot{font-size:13px}#gate .gfoot a{color:inherit}
 /* ===== Responsive: Handy · Tablet · Laptop · Desktop ===== */
 html,body{overflow-x:clip}
 img,svg,canvas,video{max-width:100%}
@@ -283,6 +293,7 @@ img,svg,canvas,video{max-width:100%}
   </header>
   <main id="view"></main>
   <p class="sync" id="sync"></p>
+  <p class="sync" id="acct"></p>
   <p class="sync"><a href="impressum.html" style="color:inherit">Impressum</a> · <a href="datenschutz.html" style="color:inherit">Datenschutz</a> · Lernhilfe, keine Rechtsberatung</p>
 </div>
 <nav class="tabbar" role="tablist" aria-label="Hauptnavigation">
@@ -526,6 +537,7 @@ img,svg,canvas,video{max-width:100%}
 </section>
 </div></template>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 const IMG = {};
 
@@ -1139,23 +1151,49 @@ const LS="jagdreif-v2";
 function lsLoad(){try{const v=JSON.parse(localStorage.getItem(LS)||localStorage.getItem("revierbegleiter-v1")||"null");if(v)ST=Object.assign(ST,v)}catch(e){}}
 function lsSave(){try{localStorage.setItem(LS,JSON.stringify(ST))}catch(e){}}
 function setSync(t){$("#sync").textContent=t}
+/* ---- Konto & Abgleich (Supabase, EU) ---- */
+const SB_URL="", SB_KEY="";   // Projekt-URL und publishable/anon key eintragen
+let SB=null, SBUSER=null;
+function setAcct(){const el=$("#acct");if(!el)return;el.innerHTML=SBUSER?`Angemeldet als ${esc(SBUSER.email)} · <a href="#" id="logout" style="color:inherit">Abmelden</a>`:"";const l=$("#logout");if(l)l.onclick=async e=>{e.preventDefault();await SB.auth.signOut();try{localStorage.removeItem(LS)}catch(x){}location.reload()}}
+function gate(show){
+  let g=$("#gate"); if(!show){if(g)g.remove();return}
+  if(g)return; g=document.createElement("div"); g.id="gate";
+  g.innerHTML=`<div class="gbox">${document.querySelector(".top svg").outerHTML}<h1>Jagdreif</h1>
+  <p>Melde dich mit deiner E-Mail-Adresse an. Du bekommst einen Link ins Postfach, ganz ohne Passwort.</p>
+  <form id="gform"><input id="gmail" type="email" required autocomplete="email" placeholder="deine@email.de" aria-label="E-Mail-Adresse">
+  <button class="btn full" type="submit">Anmeldelink schicken</button></form><p id="gmsg" class="gmsg" role="status"></p>
+  <p class="gfoot">Zugang nur auf Einladung · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p></div>`;
+  document.body.appendChild(g);
+  $("#gform").onsubmit=async e=>{e.preventDefault();const m=$("#gmail").value.trim(),msg=$("#gmsg");msg.textContent="Einen Moment …";
+    const {error}=await SB.auth.signInWithOtp({email:m,options:{shouldCreateUser:false,emailRedirectTo:location.origin+location.pathname}});
+    msg.textContent=error?(/signup|not allowed|not found/i.test(error.message)?"Diese Adresse ist nicht freigeschaltet. Frag Johannes nach einer Einladung.":/rate|seconds/i.test(error.message)?"Bitte kurz warten und dann erneut versuchen.":"Das hat nicht geklappt. Prüf deine Verbindung."):"Link ist unterwegs. Schau in dein Postfach (auch im Spam-Ordner) und tipp ihn auf diesem Gerät an.";};
+}
+async function pull(){
+  const {data,error}=await SB.from("progress").select("data").eq("user_id",SBUSER.id).maybeSingle();
+  if(error){setSync("Offline, Fortschritt lokal gespeichert");return}
+  const loc=ST._uid===SBUSER.id?(ST._ts||0):-1;
+  if(data&&data.data&&((data.data._ts||0)>=loc)){ST=Object.assign(ST,data.data);lsSave();streak();go(cur,true)}
+  else {ST._uid=SBUSER.id;await push()}
+  setSync("Fortschritt mit deinem Konto abgeglichen");
+}
+async function push(){
+  if(!SB||!SBUSER)return; ST._uid=SBUSER.id;
+  const {error}=await SB.from("progress").upsert({user_id:SBUSER.id,data:ST,updated_at:new Date().toISOString()});
+  setSync(error?"Offline, wird später abgeglichen":"Fortschritt mit deinem Konto abgeglichen"); if(error)ST._dirty=1; else delete ST._dirty;
+}
 async function initStore(){
   lsLoad(); setSync("Fortschritt nur auf diesem Gerät gespeichert");
-  try{
-    const C=window.claude; if(!C||!C.use) return;
-    const db=await C.use("db"), user=await C.use("user"); if(!db||!user) return;
-    const uid=await user.id(); if(!uid) return;
-    DB=db; UID=uid;
-    const snap=await db.doc(`data/users/${uid}/state`).get();
-    if(snap.exists){ST=Object.assign(ST,snap.data());lsSave();}
-    else await db.doc(`data/users/${uid}/state`).set(ST);
-    setSync("Fortschritt mit deinem Konto synchronisiert"); streak(); go(cur,true);
-  }catch(e){}
+  if(!SB_URL||!SB_KEY||!window.supabase)return;
+  SB=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"implicit"}});
+  const {data:{session}}=await SB.auth.getSession();
+  SBUSER=session?session.user:null; setAcct(); gate(!SBUSER);
+  if(SBUSER){if(location.hash.includes("access_token"))history.replaceState(null,"",location.pathname);await pull()}
+  SB.auth.onAuthStateChange((ev,ses)=>{const was=SBUSER&&SBUSER.id;SBUSER=ses?ses.user:null;setAcct();gate(!SBUSER);if(SBUSER&&SBUSER.id!==was){history.replaceState(null,"",location.pathname);pull()}});
+  addEventListener("online",()=>{if(ST._dirty)push()});
 }
 function save(){
-  lsSave(); if(!DB) return;
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>DB.doc(`data/users/${UID}/state`).set(ST).catch(()=>setSync("Sync fehlgeschlagen, lokal gespeichert")),800);
+  ST._ts=Date.now(); lsSave(); if(!SBUSER) return;
+  clearTimeout(saveTimer); saveTimer=setTimeout(push,1200);
 }
 function markDay(){const k=isoD(new Date());if(!ST.days[k]){ST.days[k]=1;save();streak();}}
 function streakCount(){let n=0;const d=today();if(!ST.days[isoD(d)])d.setDate(d.getDate()-1);while(ST.days[isoD(d)]){n++;d.setDate(d.getDate()-1)}return n}
