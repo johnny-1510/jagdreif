@@ -248,6 +248,10 @@ ol.steps{margin:0;padding:0;list-style:none;display:grid;gap:2px}
 .konto .kbox{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:16px}
 .konto .krow{display:flex;gap:8px}.konto .krow input{flex:1;min-width:0;width:0;font:inherit;color:var(--ink);background:var(--raised);border:1px solid var(--line);border-radius:var(--r-m);padding:11px 12px}
 .glink{all:unset;cursor:pointer;justify-self:center;font-size:14px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:6px}
+#gate .pw{position:relative}#gate .pw input{padding-right:84px}
+#gate .eye{all:unset;cursor:pointer;position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--muted);padding:6px}
+#gate input.ro{opacity:.7}
+#gate .glink{color:var(--muted)}
 /* ===== Responsive: Handy · Tablet · Laptop · Desktop ===== */
 html,body{overflow-x:clip}
 img,svg,canvas,video{max-width:100%}
@@ -1165,19 +1169,43 @@ function setSync(t){$("#sync").textContent=t}
 const SB_URL="https://exybfcrwqkossiivzuoc.supabase.co", SB_KEY="sb_publishable_gtCYy8Alv0ymConMfKiJxw_rr8tVQNW";   // Projekt-URL und publishable/anon key eintragen
 let SB=null, SBUSER=null;
 function setAcct(){acctBtn();const el=$("#acct");if(!el)return;el.innerHTML=SBUSER?`Angemeldet als ${esc(SBUSER.email)} · <a href="#" id="logout" style="color:inherit">Abmelden</a>`:"";const l=$("#logout");if(l)l.onclick=async e=>{e.preventDefault();await SB.auth.signOut();try{localStorage.removeItem(LS)}catch(x){}location.reload()}}
-function gate(show){
-  let g=$("#gate"); if(!show){if(g)g.remove();return}
-  if(g)return; g=document.createElement("div"); g.id="gate";
-  g.innerHTML=`<div class="gbox">${document.querySelector(".top svg").outerHTML}<h1>Jagdreif</h1>
-  <p>Melde dich mit deiner E-Mail-Adresse an. Du bekommst einen Link ins Postfach, ganz ohne Passwort.</p>
-  <form id="gform"><input id="gmail" type="email" required autocomplete="email" placeholder="deine@email.de" aria-label="E-Mail-Adresse">
-  <button class="btn full" type="submit">Anmeldelink schicken</button></form><p id="gmsg" class="gmsg" role="status"></p>
-  <p class="gfoot">Zugang nur auf Einladung · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p></div>`;
-  document.body.appendChild(g);
-  $("#gform").onsubmit=async e=>{e.preventDefault();const m=$("#gmail").value.trim(),msg=$("#gmsg");msg.textContent="Einen Moment …";
-    const {error}=await SB.auth.signInWithOtp({email:m,options:{shouldCreateUser:false,emailRedirectTo:location.origin+location.pathname}});
-    if(!error){gateSent(m);return}
-    msg.textContent=error?(/signup|not allowed|not found/i.test(error.message)?"Diese Adresse ist nicht freigeschaltet. Frag Johannes nach einer Einladung.":/rate|seconds/i.test(error.message)?"Bitte kurz warten und dann erneut versuchen.":"Das hat nicht geklappt. Prüf deine Verbindung."):"Link ist unterwegs. Schau in dein Postfach (auch im Spam-Ordner) und tipp ihn auf diesem Gerät an.";};
+const AUTHTYPE=(location.hash.match(/type=([a-z_]+)/)||[])[1]||"";
+const REDIR=location.origin+location.pathname;
+function gateShell(inner){let g=$("#gate");if(!g){g=document.createElement("div");g.id="gate";document.body.appendChild(g)}
+  g.innerHTML=`<div class="gbox">${document.querySelector(".top svg").outerHTML}<h1>Jagdreif</h1>${inner}<p class="gfoot">Zugang nur auf Einladung · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p></div>`;return g}
+function gErr(m){return /invalid login/i.test(m)?"E-Mail oder Passwort stimmt nicht.":/not confirmed/i.test(m)?"Bitte bestätige zuerst den Link aus deiner Einladung.":/rate|seconds|security purposes/i.test(m)?"Bitte kurz warten und dann erneut versuchen.":/should be different/i.test(m)?"Das neue Passwort muss sich vom alten unterscheiden.":/weak|least|characters/i.test(m)?"Das Passwort ist zu schwach. Nimm mindestens 8 Zeichen.":"Das hat nicht geklappt. Prüf deine Verbindung."}
+function gate(show,mode){
+  if(!show){const g=$("#gate");if(g)g.remove();return}
+  mode=mode||"login";
+  if(mode==="login"){gateShell(`<p>Melde dich mit deiner E-Mail-Adresse und deinem Passwort an.</p>
+    <form id="gform" autocomplete="on"><input id="gmail" type="email" name="username" required autocomplete="username" placeholder="E-Mail-Adresse" aria-label="E-Mail-Adresse">
+    <div class="pw"><input id="gpw" type="password" name="password" required autocomplete="current-password" placeholder="Passwort" aria-label="Passwort"><button type="button" class="eye" aria-label="Passwort anzeigen">Zeigen</button></div>
+    <button class="btn full" type="submit">Anmelden</button></form><p id="gmsg" class="gmsg" role="status"></p>
+    <button class="glink" id="gforgot">Passwort vergessen?</button>`);
+    $("#gform").onsubmit=async e=>{e.preventDefault();const msg=$("#gmsg");msg.textContent="Einen Moment …";
+      const {error}=await SB.auth.signInWithPassword({email:$("#gmail").value.trim(),password:$("#gpw").value});
+      msg.textContent=error?gErr(error.message):""};
+    $("#gforgot").onclick=()=>gate(true,"forgot");
+  }
+  if(mode==="forgot"){gateShell(`<p>Gib deine E-Mail-Adresse ein. Du bekommst einen Link, mit dem du ein neues Passwort festlegst.</p>
+    <form id="gform"><input id="gmail" type="email" required autocomplete="username" placeholder="E-Mail-Adresse" aria-label="E-Mail-Adresse">
+    <button class="btn full" type="submit">Link schicken</button></form><p id="gmsg" class="gmsg" role="status"></p>
+    <button class="glink" id="gback">Zurück zur Anmeldung</button>`);
+    $("#gform").onsubmit=async e=>{e.preventDefault();const msg=$("#gmsg");msg.textContent="Einen Moment …";
+      const {error}=await SB.auth.resetPasswordForEmail($("#gmail").value.trim(),{redirectTo:REDIR});
+      msg.textContent=error?gErr(error.message):"Falls die Adresse freigeschaltet ist, ist der Link unterwegs. Schau auch im Spam-Ordner nach."};
+    $("#gback").onclick=()=>gate(true,"login");
+  }
+  if(mode==="setpw"){gateShell(`<p>${AUTHTYPE==="invite"?"Willkommen! Leg dein Passwort fest, damit du dich auf jedem Gerät anmelden kannst.":"Leg ein neues Passwort fest."}</p>
+    <form id="gform"><input type="email" autocomplete="username" value="${esc(SBUSER?SBUSER.email:"")}" readonly aria-label="E-Mail-Adresse" class="ro">
+    <div class="pw"><input id="gpw" type="password" required minlength="8" autocomplete="new-password" placeholder="Neues Passwort" aria-label="Neues Passwort"><button type="button" class="eye" aria-label="Passwort anzeigen">Zeigen</button></div>
+    <p style="font-size:13px;margin:0;text-align:left">Mindestens 8 Zeichen.</p><button class="btn full" type="submit">Passwort speichern</button></form><p id="gmsg" class="gmsg" role="status"></p>${AUTHTYPE?"":'<button class="glink" id="gcancel">Abbrechen</button>'}`);
+    const c=$("#gcancel");if(c)c.onclick=()=>gate(false);
+    $("#gform").onsubmit=async e=>{e.preventDefault();const msg=$("#gmsg"),pw=$("#gpw").value;if(pw.length<8){msg.textContent="Mindestens 8 Zeichen, bitte.";return}msg.textContent="Speichere …";
+      const {error}=await SB.auth.updateUser({password:pw});
+      if(error){msg.textContent=gErr(error.message);return} msg.textContent="Gespeichert. Waidmannsheil!";setTimeout(()=>{gate(false);go(cur,true)},700)};
+  }
+  const eye=document.querySelector("#gate .eye");if(eye)eye.onclick=()=>{const i=$("#gpw");i.type=i.type==="password"?"text":"password";eye.textContent=i.type==="password"?"Zeigen":"Verbergen"};
 }
 async function pull(){
   const {data,error}=await SB.from("progress").select("data").eq("user_id",SBUSER.id).maybeSingle();
@@ -1197,27 +1225,20 @@ async function initStore(){
   if(!SB_URL||!SB_KEY||!window.supabase)return;
   SB=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"implicit"}});
   const {data:{session}}=await SB.auth.getSession();
-  SBUSER=session?session.user:null; setAcct(); gate(!SBUSER);
+  SBUSER=session?session.user:null; setAcct(); gate(!SBUSER); if(SBUSER&&(AUTHTYPE==="invite"||AUTHTYPE==="recovery"))gate(true,"setpw");
   if(SBUSER){if(location.hash.includes("access_token"))history.replaceState(null,"",location.pathname);await pull()}
-  SB.auth.onAuthStateChange((ev,ses)=>{const was=SBUSER&&SBUSER.id;SBUSER=ses?ses.user:null;setAcct();gate(!SBUSER);if(SBUSER&&SBUSER.id!==was){history.replaceState(null,"",location.pathname);pull()}});
+  SB.auth.onAuthStateChange((ev,ses)=>{const was=SBUSER&&SBUSER.id;SBUSER=ses?ses.user:null;setAcct();if(ev==="PASSWORD_RECOVERY"){gate(true,"setpw");return}if(ev==="USER_UPDATED")return;if(!SBUSER)gate(true);else if(!$("#gate .ro"))gate(false);if(SBUSER&&SBUSER.id!==was){history.replaceState(null,"",location.pathname);pull()}});
   addEventListener("online",()=>{if(ST._dirty)push()});
 }
 
 function uName(){if(!SBUSER)return"";const n=(SBUSER.user_metadata||{}).name;return n||SBUSER.email.split("@")[0].replace(/[._-]+/g," ").replace(/\b\w/g,c=>c.toUpperCase())}
 function initials(){return uName().split(" ").filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join("")||"?"}
 function acctBtn(){const b=$("#acctbtn");if(!b)return;b.hidden=!SB;b.innerHTML=SBUSER?`<span>${esc(initials())}</span>`:`<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>`;b.onclick=()=>{vib(8);go("konto")}}
-function gateSent(m){const box=$("#gate .gbox");box.innerHTML=`<svg viewBox="0 0 48 48" width="64" height="64" fill="none" stroke="var(--messing)" stroke-width="1.6"><rect x="6" y="11" width="36" height="26" rx="3"/><path d="M7 13l17 13 17-13"/></svg>
-  <h1 style="font-size:30px">Schau in dein Postfach</h1><p>Wir haben einen Anmeldelink an <b style="color:var(--ink)">${esc(m)}</b> geschickt. Tipp ihn auf <b style="color:var(--ink)">diesem Gerät</b> an, dann bist du drin.</p>
-  <p style="font-size:14px">Nichts da? Schau im Spam-Ordner nach.</p><button class="btn ghost full" id="gagain" disabled>Erneut senden in <span id="gcd">60</span> s</button>
-  <button class="glink" id="gother">Andere E-Mail-Adresse</button>`;
-  let n=60;const t=setInterval(()=>{n--;const c=$("#gcd");if(c)c.textContent=n;if(n<=0){clearInterval(t);const a=$("#gagain");if(a){a.disabled=false;a.textContent="Link erneut senden"}}},1000);
-  $("#gagain").onclick=async()=>{await SB.auth.signInWithOtp({email:m,options:{shouldCreateUser:false,emailRedirectTo:location.origin+location.pathname}});gateSent(m)};
-  $("#gother").onclick=()=>{clearInterval(t);$("#gate").remove();gate(true)};}
 function vKontoSync(){const el=$("#ksync");if(!el)return;const t=ST._synced?new Date(ST._synced):null;
   el.innerHTML=ST._dirty?`<b style="color:var(--signal)">●</b> Noch nicht abgeglichen, passiert automatisch, sobald du online bist`:t?`<b style="color:var(--richtig)">●</b> Abgeglichen ${t.toLocaleDateString("de-DE",{day:"numeric",month:"short"})}, ${t.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})} Uhr`:"Noch kein Abgleich"}
 function vKonto(){
   const v=$("#view");
-  if(!SBUSER){v.innerHTML=`<section class="screen"><h1 class="h">Dein Konto</h1><p class="muted">Du bist nicht angemeldet. Dein Fortschritt liegt nur auf diesem Gerät.</p>${SB?'<button class="btn full" id="klogin">Anmelden</button>':""}</section>`;const l=$("#klogin");if(l)l.onclick=()=>gate(true);return}
+  if(!SBUSER){v.innerHTML=`<section class="screen"><h1 class="h">Dein Konto</h1><p class="muted">Du bist nicht angemeldet. Dein Fortschritt liegt nur auf diesem Gerät.</p>${SB?'<button class="btn full" id="klogin">Anmelden</button>':""}</section>`;const l=$("#klogin");if(l)l.onclick=()=>gate(true,"login");return}
   const known=CARDS.filter((c,k)=>ST.srs[k]&&ST.srs[k].box>=3).length, days=Object.keys(ST.days||{}).length, since=new Date(SBUSER.created_at).toLocaleDateString("de-DE",{month:"long",year:"numeric"});
   v.innerHTML=`<section class="screen konto">
   <div class="kid"><div class="kav">${esc(initials())}</div><div><p class="kicker">Waidmannsheil</p><h1 class="h" style="margin:0">${esc(uName())}</h1><p class="muted" style="margin:2px 0 0">${esc(SBUSER.email)}<br>dabei seit ${since}</p></div></div>
@@ -1228,11 +1249,13 @@ function vKonto(){
   </div>
   <div class="kbox"><b>Anzeigename</b><div class="krow"><input id="kname" value="${esc(uName())}" maxlength="40" aria-label="Anzeigename"><button class="btn" id="ksave">Speichern</button></div><p class="muted" id="kmsg" style="margin:0"></p></div>
   <div class="kbox"><b>Abgleich</b><p id="ksync" style="margin:0"></p><p class="muted" style="margin:0">Melde dich auf Laptop und Handy mit derselben Adresse an, dann ist dein Lernstand überall gleich.</p><button class="btn ghost" id="know">Jetzt abgleichen</button></div>
+  <div class="kbox"><b>Passwort</b><button class="btn ghost" id="kpw">Passwort ändern</button></div>
   <div class="kbox"><button class="btn ghost full" id="kout">Abmelden</button><button class="glink" id="kreset">Lernstand zurücksetzen</button></div>
   </section>`;
   vKontoSync();
   $("#ksave").onclick=async()=>{const n=$("#kname").value.trim();if(!n)return;$("#kmsg").textContent="Speichere …";const {data,error}=await SB.auth.updateUser({data:{name:n}});if(!error&&data.user)SBUSER=data.user;$("#kmsg").textContent=error?"Hat nicht geklappt, bist du online?":"Gespeichert.";acctBtn();if(!error)setTimeout(()=>go("konto",true),600)};
   $("#know").onclick=async()=>{$("#ksync").textContent="Gleiche ab …";await push()};
+  $("#kpw").onclick=()=>gate(true,"setpw");
   $("#kout").onclick=async()=>{await SB.auth.signOut();try{localStorage.removeItem(LS)}catch(x){}location.reload()};
   let armed=0;$("#kreset").onclick=async e=>{if(!armed){armed=1;e.target.textContent="Wirklich alles löschen? Nochmal tippen";e.target.style.color="var(--falsch)";setTimeout(()=>{armed=0;if(e.target.isConnected){e.target.textContent="Lernstand zurücksetzen";e.target.style.color=""}},4000);return}
     ST={srs:{},missions:{},journal:[],days:{},best:0,quizBest:{}};await push();lsSave();streak();go("konto",true)};
