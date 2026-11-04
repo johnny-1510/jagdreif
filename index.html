@@ -1184,19 +1184,19 @@ function gate(show,mode){
     <form id="gform" autocomplete="on"><input id="gmail" type="email" name="username" required autocomplete="username" placeholder="E-Mail-Adresse" aria-label="E-Mail-Adresse">
     <div class="pw"><input id="gpw" type="password" name="password" required autocomplete="current-password" placeholder="Passwort" aria-label="Passwort"><button type="button" class="eye" aria-label="Passwort anzeigen">Zeigen</button></div>
     <button class="btn full" type="submit">Anmelden</button></form><p id="gmsg" class="gmsg" role="status"></p>
-    <button class="glink" id="gforgot">Passwort vergessen?</button>`);
+    <button class="glink" id="gforgot">Noch kein Passwort oder vergessen?</button>`);
     $("#gform").onsubmit=async e=>{e.preventDefault();const msg=$("#gmsg");msg.textContent="Einen Moment …";
       const {error}=await SB.auth.signInWithPassword({email:$("#gmail").value.trim(),password:$("#gpw").value});
       msg.textContent=error?gErr(error.message):""};
     $("#gforgot").onclick=()=>gate(true,"forgot");
   }
-  if(mode==="forgot"){gateShell(`<p>Gib deine E-Mail-Adresse ein. Du bekommst einen Link, mit dem du ein neues Passwort festlegst.</p>
+  if(mode==="forgot"){gateShell(`<p>Gib deine E-Mail-Adresse ein. Du bekommst einen Link. Der führt dich direkt auf eine Seite, auf der du dein Passwort festlegst.</p>
     <form id="gform"><input id="gmail" type="email" required autocomplete="username" placeholder="E-Mail-Adresse" aria-label="E-Mail-Adresse">
     <button class="btn full" type="submit">Link schicken</button></form><p id="gmsg" class="gmsg" role="status"></p>
     <button class="glink" id="gback">Zurück zur Anmeldung</button>`);
     $("#gform").onsubmit=async e=>{e.preventDefault();const msg=$("#gmsg");msg.textContent="Einen Moment …";
       const {error}=await SB.auth.resetPasswordForEmail($("#gmail").value.trim(),{redirectTo:REDIR});
-      msg.textContent=error?gErr(error.message):"Falls die Adresse freigeschaltet ist, ist der Link unterwegs. Schau auch im Spam-Ordner nach."};
+      msg.textContent=error?gErr(error.message):"Link ist unterwegs. Öffne die Mail auf diesem Gerät und tipp auf den Link, dann kannst du dein Passwort eintragen. Schau auch im Spam-Ordner nach."};
     $("#gback").onclick=()=>gate(true,"login");
   }
   if(mode==="setpw"){gateShell(`<p>${AUTHTYPE==="invite"?"Willkommen! Leg dein Passwort fest, damit du dich auf jedem Gerät anmelden kannst.":"Leg ein neues Passwort fest."}</p>
