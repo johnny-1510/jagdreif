@@ -1186,7 +1186,7 @@ const AUTHTYPE=(location.hash.match(/type=([a-z_]+)/)||[])[1]||"";
 const REDIR=location.origin+location.pathname;
 function gateShell(inner){let g=$("#gate");if(!g){g=document.createElement("div");g.id="gate";document.body.appendChild(g)}
   g.innerHTML=`<div class="gbox">${document.querySelector(".top svg").outerHTML}<h1>Jagdreif</h1>${inner}<p class="gfoot"><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p></div>`;return g}
-function gErr(m){return /invalid login/i.test(m)?"E-Mail oder Passwort stimmt nicht.":/not confirmed/i.test(m)?"Bitte bestätige zuerst den Link aus deiner Einladung.":/rate|seconds|security purposes/i.test(m)?"Bitte kurz warten und dann erneut versuchen.":/should be different/i.test(m)?"Das neue Passwort muss sich vom alten unterscheiden.":/weak|least|characters/i.test(m)?"Das Passwort ist zu schwach. Nimm mindestens 8 Zeichen.":"Das hat nicht geklappt. Prüf deine Verbindung."}
+function gErr(m){return /invalid login/i.test(m)?"E-Mail oder Passwort stimmt nicht. Noch kein Konto? Tipp unten auf „Konto erstellen“.":/not confirmed/i.test(m)?"Bitte bestätige zuerst den Link aus deiner Einladung.":/rate|seconds|security purposes/i.test(m)?"Bitte kurz warten und dann erneut versuchen.":/should be different/i.test(m)?"Das neue Passwort muss sich vom alten unterscheiden.":/weak|least|characters/i.test(m)?"Das Passwort ist zu schwach. Nimm mindestens 8 Zeichen.":"Das hat nicht geklappt. Prüf deine Verbindung."}
 function gate(show,mode){
   if(!show){const g=$("#gate");if(g)g.remove();return}
   mode=mode||"login";
