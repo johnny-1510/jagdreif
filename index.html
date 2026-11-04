@@ -265,6 +265,15 @@ ol.steps{margin:0;padding:0;list-style:none;display:grid;gap:2px}
 #gate input.ro{opacity:.7}
 #gate .glink{color:var(--muted)}
 #gate .gsep{margin:0;border-top:1px solid var(--line);padding-top:14px;width:100%}#gate .glink.inl{color:var(--messing);padding:0 2px;font-weight:600}
+.az-stage.three{height:clamp(320px,calc(100svh - 360px),600px);background:#10140f}
+.az-stage canvas.az3d{position:absolute;inset:0;width:100%;height:100%;display:block}
+.az-stage.three .az-hud,.az-stage.three .az-msg,.az-stage.three .az-light{pointer-events:none;z-index:3}
+.az-tools{position:absolute;right:12px;bottom:18px;display:flex;gap:8px;z-index:4}
+.az-tool{all:unset;cursor:pointer;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:rgba(14,18,14,.62);border:1px solid rgba(205,168,92,.55);color:#e9e3cf;backdrop-filter:blur(4px)}
+.az-tool[aria-pressed="true"]{background:var(--messing);color:var(--messing-on)}
+.az-hint{position:absolute;left:12px;bottom:24px;right:120px;z-index:3;font-size:13px;color:#e9e3cf;text-shadow:0 1px 6px #000;transition:opacity .8s;pointer-events:none}
+.glasov{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.glasov i{position:absolute;left:50%;top:50%;width:min(86%,78vh);aspect-ratio:1.55;transform:translate(-50%,-50%);border-radius:50% / 62%;box-shadow:0 0 0 200vmax rgba(5,7,5,.96),inset 0 0 30px 10px rgba(5,7,5,.85)}
 /* ===== Responsive: Handy · Tablet · Laptop · Desktop ===== */
 html,body{overflow-x:clip}
 img,svg,canvas,video{max-width:100%}
@@ -1410,7 +1419,7 @@ const BRUCH=(c="currentColor",s=18)=>`<svg class="bruch" width="${s}" height="${
 /* ================= Navigation ================= */
 let cur="heute", skyTimer=null;
 const VIEWS={heute:vHeute,lernen:vLernen,trainer:vTrainer,revier:vRevier,wissen:vWissen,konto:()=>vKonto()};
-function go(t,keepScroll){cur=t;document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===t));
+function go(t,keepScroll){cur=t;if(W3)W3.stop();document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===t));
   clearInterval(skyTimer); $("#view").innerHTML=""; VIEWS[t](); if(!keepScroll)window.scrollTo({top:0});
   try{localStorage.setItem(LS+"-tab",t)}catch(e){}}
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{vib(8);go(b.dataset.t)}));
@@ -1906,10 +1915,12 @@ function azDate(){const t=dayTimes();return t.set?new Date(t.set.getTime()-12*6e
 function azStart(){
   $("#tz").innerHTML=`<section class="az-intro"><div class="az-stage small">${skySVG(azDate())}</div>
    <div style="display:grid;gap:10px"><span class="h2">Du sitzt an. Heute Abend, am See.</span>
-   <p class="muted" style="margin:0">Fünf Situationen, echtes Datum, echte Jagdzeiten. Wild tritt aus, du sprichst durchs Fernglas an und entscheidest: Schuss oder passieren lassen. Das Licht schwindet, du hast pro Anblick 25 Sekunden.</p>
+   <p class="muted" style="margin:0">Fünf Situationen, echtes Datum, echte Jagdzeiten. Wild tritt aus, du sprichst durchs Fernglas an und entscheidest: Schuss oder passieren lassen. Das Licht schwindet, du hast pro Anblick 30 Sekunden. Sieh dich um, nimm das Fernglas und sprich sauber an.</p>
    <div class="row" style="justify-content:space-between"><span class="eyebrow">Bestwert</span><span class="score" style="font-size:34px">${ST.azBest||0}</span></div>
    <button class="btn full" id="azgo">Aufbaumen</button></div></section>`;
-  $("#azgo").addEventListener("click",()=>{const pool=[...SCN].sort(()=>Math.random()-.5).slice(0,5);az={pool,i:0,score:0,log:[]};vib([10,40,10]);azScene()});
+  $("#azgo").addEventListener("click",async e=>{const pool=[...SCN].sort(()=>Math.random()-.5).slice(0,5);az={pool,i:0,score:0,log:[]};vib([10,40,10]);
+    e.target.disabled=true;e.target.textContent="Revier wird geladen …";const ok=await load3D();
+    if(ok){try{W3=W3||AZ3D.World();return azScene3D()}catch(x){W3=null}}azScene()});
 }
 let azRaf=null, azT=null;
 function azScene(){
@@ -1944,6 +1955,48 @@ function azScene(){
     $("#glas").innerHTML=`<div class="glas-in"><span class="h2 ${res==="ok"?"ok fr":res==="no"?"no":""}" style="font-size:${res==="ok"?28:21}px">${res==="ok"?BRUCH("var(--richtig)",22)+" ":""}${head}${timeout?" (Licht weg)":""}</span><p style="margin:0">${txt}</p><span class="data">+${pts} Punkte</span></div>
      <button class="btn full" id="nx">${az.i+1<az.pool.length?"Weiter ansitzen":"Abbaumen"}</button>`;
     $("#nx").addEventListener("click",()=>{az.i++;azScene()});markDay();}
+}
+
+/* ---------- Ansitz in 3D ---------- */
+let W3=null, W3p=null;
+function load3D(){if(W3p)return W3p;const add=src=>new Promise((r,j)=>{const e=document.createElement("script");e.src=src;e.onload=r;e.onerror=j;document.head.appendChild(e)});
+  W3p=add("three.min.js").then(()=>add("az3d.js")).then(()=>!!(window.AZ3D&&AZ3D.supported())).catch(()=>false);return W3p}
+const ICO_GLAS=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="7" cy="15" r="4"/><circle cx="17" cy="15" r="4"/><path d="M5 11l2-6h3l1 6M19 11l-2-6h-3l-1 6M11 14h2"/></svg>`;
+const ICO_TILT=`<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M3 9c-1 2-1 4 0 6M21 9c1 2 1 4 0 6"/></svg>`;
+function azScene3D(){
+  cancelAnimationFrame(azRaf);clearTimeout(azT);
+  if(az.i>=az.pool.length){W3.stop();return azEnd()}
+  const sc=az.pool[az.i], d=azDate(); d.setMinutes(d.getMinutes()+az.i*5);
+  $("#tz").innerHTML=`<div class="az-wrap"><div class="az-stage three" id="stage">
+    <div class="glasov" id="glasov" hidden><i></i></div>
+    <div class="az-hud"><span class="data" style="color:#e9e3cf">Anblick ${az.i+1}/5 · ${az.score} Punkte</span><span class="data" style="color:#e9e3cf">Wind: ${["SW","W","NW"][az.i%3]}, steht gut</span></div>
+    <div class="az-light"><i id="lightbar"></i></div>
+    <div class="az-msg" id="msg">${sc.title}</div>
+    <div class="az-tools"><button class="az-tool" id="tglas" aria-label="Fernglas" aria-pressed="false">${ICO_GLAS}</button>${typeof DeviceOrientationEvent!=="undefined"?`<button class="az-tool" id="ttilt" aria-label="Umsehen durch Neigen" aria-pressed="false">${ICO_TILT}</button>`:""}</div>
+    <div class="az-hint" id="hint">Wischen zum Umsehen · Fernglas für Details · Stück antippen</div></div>
+   <div id="glas" class="glas"><p class="muted" style="margin:0">Such die Wiese ab und tipp ein Stück an, um es anzusprechen.</p><button class="btn ghost full" id="pass">Passieren lassen</button></div></div>`;
+  const stage=$("#stage");W3.attach(stage);
+  const setGlass=on=>{const g=W3.glass(on);$("#glasov").hidden=!g;$("#tglas").setAttribute("aria-pressed",g)};
+  $("#tglas").onclick=()=>{vib(8);setGlass()};
+  const tt=$("#ttilt");if(tt)tt.onclick=async()=>{const on=await W3.gyro();tt.setAttribute("aria-pressed",on)};
+  setTimeout(()=>{const h=$("#hint");if(h)h.style.opacity=0},4500);
+  let decided=false;
+  W3.scene(sc,d,i=>{if(decided)return;const a=sc.an[i];vib(8);
+    $("#glas").innerHTML=`<div class="glas-in"><span class="eyebrow" style="color:var(--messing)">Im Glas</span><p style="margin:0;font-size:17px">${a.d}</p></div>
+     <div class="row" style="flex-wrap:nowrap"><button class="btn ghost" style="flex:1" id="pass">Passieren lassen</button><button class="btn shoot" style="flex:1" id="shoot">Schuss</button></div>`;
+    $("#pass").onclick=()=>decide(null);$("#shoot").onclick=()=>decide(i)});
+  const t0=performance.now(),DUR=30000;
+  const step=now=>{const lp=Math.min(1,(now-t0)/DUR);const lb=$("#lightbar");if(!lb)return;lb.style.transform=`scaleX(${1-lp})`;W3.progress(lp);if(lp>=1){decide(null,true);return}azRaf=requestAnimationFrame(step)};
+  azRaf=requestAnimationFrame(step);
+  $("#pass").onclick=()=>decide(null);
+  function decide(t,timeout){if(decided)return;decided=true;cancelAnimationFrame(azRaf);
+    const [res,txt]=sc.eval(t,new Date()), pts=res==="ok"?100:res==="half"?30:0; az.score+=pts; az.log.push({t:sc.title,res});
+    if(t!=null){stage.classList.add("flash");vib(60);setTimeout(()=>stage.classList.remove("flash"),220);W3.shoot(t,sc.an[t].k!=="mensch")}else W3.leave();
+    setTimeout(()=>setGlass(false),900);
+    const head=res==="ok"?(t!=null?"Waidmannsheil":"Richtig entschieden"):res==="half"?"Kein Fehler":"Gefehlt";
+    $("#glas").innerHTML=`<div class="glas-in"><span class="h2 ${res==="ok"?"ok fr":res==="no"?"no":""}" style="font-size:${res==="ok"?28:21}px">${res==="ok"?BRUCH("var(--richtig)",22)+" ":""}${head}${timeout?" (Licht weg)":""}</span><p style="margin:0">${txt}</p><span class="data">+${pts} Punkte</span></div>
+     <button class="btn full" id="nx">${az.i+1<az.pool.length?"Weiter ansitzen":"Abbaumen"}</button>`;
+    $("#nx").onclick=()=>{az.i++;azScene3D()};markDay();}
 }
 function azEnd(){
   const nb=az.score>(ST.azBest||0); if(nb){ST.azBest=az.score;save()}
