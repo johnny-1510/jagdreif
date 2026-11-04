@@ -1972,13 +1972,12 @@ function azScene3D(){
     <div class="az-hud"><span class="data" style="color:#e9e3cf">Anblick ${az.i+1}/5 · ${az.score} Punkte</span><span class="data" style="color:#e9e3cf">Wind: ${["SW","W","NW"][az.i%3]}, steht gut</span></div>
     <div class="az-light"><i id="lightbar"></i></div>
     <div class="az-msg" id="msg">${sc.title}</div>
-    <div class="az-tools"><button class="az-tool" id="tglas" aria-label="Fernglas" aria-pressed="false">${ICO_GLAS}</button>${typeof DeviceOrientationEvent!=="undefined"?`<button class="az-tool" id="ttilt" aria-label="Umsehen durch Neigen" aria-pressed="false">${ICO_TILT}</button>`:""}</div>
+    <div class="az-tools"><button class="az-tool" id="tglas" aria-label="Fernglas" aria-pressed="false">${ICO_GLAS}</button></div>
     <div class="az-hint" id="hint">Wischen zum Umsehen · Fernglas für Details · Stück antippen</div></div>
    <div id="glas" class="glas"><p class="muted" style="margin:0">Such die Wiese ab und tipp ein Stück an, um es anzusprechen.</p><button class="btn ghost full" id="pass">Passieren lassen</button></div></div>`;
   const stage=$("#stage");W3.attach(stage);
   const setGlass=on=>{const g=W3.glass(on);$("#glasov").hidden=!g;$("#tglas").setAttribute("aria-pressed",g)};
   $("#tglas").onclick=()=>{vib(8);setGlass()};
-  const tt=$("#ttilt");if(tt)tt.onclick=async()=>{const on=await W3.gyro();tt.setAttribute("aria-pressed",on)};
   setTimeout(()=>{const h=$("#hint");if(h)h.style.opacity=0},4500);
   let decided=false;
   W3.scene(sc,d,i=>{if(decided)return;const a=sc.an[i];vib(8);
