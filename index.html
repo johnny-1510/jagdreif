@@ -1152,7 +1152,7 @@ function lsLoad(){try{const v=JSON.parse(localStorage.getItem(LS)||localStorage.
 function lsSave(){try{localStorage.setItem(LS,JSON.stringify(ST))}catch(e){}}
 function setSync(t){$("#sync").textContent=t}
 /* ---- Konto & Abgleich (Supabase, EU) ---- */
-const SB_URL="", SB_KEY="";   // Projekt-URL und publishable/anon key eintragen
+const SB_URL="https://exybfcrwqkossiivzuoc.supabase.co", SB_KEY="sb_publishable_gtCYy8Alv0ymConMfKiJxw_rr8tVQNW";   // Projekt-URL und publishable/anon key eintragen
 let SB=null, SBUSER=null;
 function setAcct(){const el=$("#acct");if(!el)return;el.innerHTML=SBUSER?`Angemeldet als ${esc(SBUSER.email)} · <a href="#" id="logout" style="color:inherit">Abmelden</a>`:"";const l=$("#logout");if(l)l.onclick=async e=>{e.preventDefault();await SB.auth.signOut();try{localStorage.removeItem(LS)}catch(x){}location.reload()}}
 function gate(show){
