@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://exybfcrwqkossiivzuoc.supabase.co; base-uri 'none'; form-action 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://exybfcrwqkossiivzuoc.supabase.co; base-uri 'none'; form-action 'self'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -12,9 +12,18 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Jagdreif</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,500&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=UnifrakturMaguntia&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
+@font-face{font-family:"Alegreya";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/alegreya-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Alegreya";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/alegreya-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Alegreya";font-style:italic;font-weight:500;font-display:swap;src:url(fonts/alegreya-latin-500-italic.woff2) format("woff2")}
+@font-face{font-family:"Alegreya Sans";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/alegreya-sans-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Alegreya Sans";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/alegreya-sans-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Alegreya Sans";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/alegreya-sans-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Alegreya Sans";font-style:italic;font-weight:400;font-display:swap;src:url(fonts/alegreya-sans-latin-400-italic.woff2) format("woff2")}
+@font-face{font-family:"UnifrakturMaguntia";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/unifrakturmaguntia-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/ibm-plex-mono-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/ibm-plex-mono-latin-500-normal.woff2) format("woff2")}
+
 html,body{margin:0}
 
 /* Layout: eine Handy-Spalte (max. 480px) mit fester Tab-Leiste unten; jeder Tab ist ein eigener Bildschirm. Bewusst nur dunkel: Thema „Ansitz“ aus der Jagdreif-CI. */
@@ -1211,6 +1220,7 @@ function gate(show,mode){
       const {data,error}=await SB.auth.signUp({email:m,password:pw,options:{emailRedirectTo:REDIR}});
       if(error){msg.textContent=/already|registered|exists/i.test(error.message)?"Für diese Adresse gibt es schon ein Konto. Melde dich an oder setz dein Passwort zurück.":gErr(error.message);return}
       if(data.session){gate(false);return}
+      if(data.user&&Array.isArray(data.user.identities)&&!data.user.identities.length){msg.textContent="Für diese Adresse gibt es schon ein Konto. Tipp auf „Anmelden“ und dann auf „Passwort vergessen?“.";return}
       gateShell(`<p style="color:var(--ink);font-size:19px">Fast geschafft!</p><p>Wir haben dir eine Mail an <b style="color:var(--ink)">${esc(m)}</b> geschickt. Tipp auf den Link darin, um deine Adresse zu bestätigen. Danach bist du angemeldet.</p><p style="font-size:14px">Nichts da? Schau im Spam-Ordner nach.</p><button class="glink" id="gback">Zurück zur Anmeldung</button>`);$("#gback").onclick=()=>gate(true,"login")};
     $("#gback").onclick=()=>gate(true,"login");
   }
