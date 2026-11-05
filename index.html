@@ -297,6 +297,13 @@ ol.steps{margin:0;padding:0;list-style:none;display:grid;gap:2px}
 canvas.az3d.thermal{filter:grayscale(1) contrast(1.6) brightness(1.5)}
 .az-mode{display:inline-block;margin-left:10px;font-family:var(--mono);font-style:normal;font-size:12px;padding:3px 8px;border-radius:999px;background:rgba(0,0,0,.45);border:1px solid rgba(233,227,207,.4);vertical-align:middle}
 @media (max-width:420px){.stats{grid-template-columns:repeat(2,1fr)}.rf summary{grid-template-columns:22px 78px 1fr 40px}}
+.mcqq{font-size:clamp(21px,5.4vw,26px);line-height:1.25}
+.mcopts{display:grid;gap:10px}.mco{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--raised);font-size:16px;line-height:1.35;transition:border-color .15s,background .15s}
+.mco:hover:not(:disabled){border-color:var(--messing)}.mco:focus-visible{outline:2px solid var(--messing);outline-offset:2px}
+.mcl{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);font-family:var(--mono);font-size:13px;color:var(--muted)}
+.mco.right{border-color:var(--richtig);background:color-mix(in srgb,var(--richtig) 14%,var(--raised))}.mco.right .mcl{background:var(--richtig);color:#151a15;border-color:var(--richtig)}
+.mco.wrong{border-color:var(--falsch);background:color-mix(in srgb,var(--falsch) 14%,var(--raised))}.mco.wrong .mcl{background:var(--falsch);color:#151a15;border-color:var(--falsch)}
+.mco:disabled{cursor:default}.mco:disabled:not(.right):not(.wrong){opacity:.55}
 /* ===== Responsive: Handy · Tablet · Laptop · Desktop ===== */
 html,body{overflow-x:clip}
 img,svg,canvas,video{max-width:100%}
@@ -2418,6 +2425,45 @@ SCN.push(
 );
 
 /*EXT4-END*/
+/*EXT5-START*/
+/* ---------- Lernkarten als Multiple Choice ---------- */
+const MCC={}; let mcPick=null;
+const mcWords=t=>new Set(String(t).toLowerCase().replace(/<[^>]+>/g," ").match(/[a-zäöüß0-9]{4,}/g)||[]);
+const mcShape=t=>[/\d{1,2}\.\s?\d{1,2}\./.test(t),/§/.test(t),/\d/.test(t),/^(ja|nein)\b/i.test(t)];
+mcFrom=function(k){const c=CARDS[k],a=c[2],la=a.length,wa=mcWords(a),sa=mcShape(a),sg=sgOf(c);
+  const cand=CARDS.map((x,i)=>i).filter(i=>i!==k&&CARDS[i][2]!==a&&(CARDS[i][0]===c[0]||sgOf(CARDS[i])===sg));
+  const sc=cand.map(i=>{const b=CARDS[i][2],lb=b.length,wb=mcWords(b),sb=mcShape(b);let ov=0;wb.forEach(w=>{if(wa.has(w))ov++});
+    let v=-Math.abs(Math.log(lb/la))*1.6+ov/Math.max(3,wa.size)*2.5+sa.reduce((s,x,j)=>s+(x===sb[j]?.35:-.35),0)+(CARDS[i][0]===c[0]?.4:0)+Math.random()*.35;return {i,v}}).sort((x,y)=>y.v-x.v);
+  const tooClose=t=>{const wb=mcWords(t);let ov=0;wb.forEach(w=>{if(wa.has(w))ov++});return ov/Math.max(1,Math.min(wa.size,wb.size))>.45||t.slice(0,24)===a.slice(0,24)};
+  const pick=[];for(const x of sc){const t=CARDS[x.i][2];if(!pick.includes(t)&&!tooClose(t))pick.push(t);if(pick.length>=3)break}
+  const opts=[a,...pick].sort(()=>Math.random()-.5);return {k,q:c[1],opts,a:opts.indexOf(a),sg}};
+karten=(function(prev){return function(){
+  if((ST.kmode||"mc")!=="mc")return kmodeBar(prev);
+  if(!queue.length&&cIdx==null)buildQueue();
+  if(cIdx==null&&queue.length){cIdx=queue.shift();mcPick=null}
+  if(cIdx==null)return kmodeBar(prev);
+  const c=CARDS[cIdx], q=MCC[cIdx]||(MCC[cIdx]=mcFrom(cIdx)), known=Object.values(ST.srs).filter(s=>s.box>=3).length, L="ABCD";
+  $("#lz").innerHTML=`<div style="display:grid;gap:14px">${kmodeHTML()}
+   <div class="row" style="justify-content:space-between"><span class="data">${known} von ${CARDS.length} sitzen</span><span class="data">heute ${doneToday()}/10${queue.length?` · noch ${queue.length+1}`:""}</span></div>
+   <section class="card mcq" style="gap:14px"><span class="eyebrow">SG ${sgOf(c)} · ${c[0]}${ST.srs[cIdx]?" · Stufe "+ST.srs[cIdx].box:" · neu"}${FE()[cIdx]?` · <span style="color:var(--falsch)">Fehlerheft</span>`:""}</span>
+    <span class="h2 mcqq">${c[1]}</span>
+    <div class="mcopts">${q.opts.map((o,i)=>`<button class="mco" data-i="${i}"><span class="mcl">${L[i]}</span><span>${o}</span></button>`).join("")}</div>
+    <div id="mcfb"></div></section></div>`;
+  bindKmode(prev);
+  const pick=i=>{if(mcPick!=null)return;mcPick=i;const ok=i===q.a;vib(ok?[10,30,10]:40);
+    document.querySelectorAll(".mco").forEach(b=>{const j=+b.dataset.i;b.disabled=true;if(j===q.a)b.classList.add("right");else if(j===i)b.classList.add("wrong")});
+    $("#mcfb").innerHTML=`<div class="glas-in"><span class="h2 ${ok?"ok fr":"no"}" style="font-size:${ok?24:20}px">${ok?BRUCH("var(--richtig)",18)+" Sitzt":"Gefehlt, kommt ins Fehlerheft"}</span>${ok?"":`<p style="margin:0">Richtig ist: <b>${c[2]}</b></p>`}</div>
+     <button class="btn full" id="mcnext">Weiter</button>`;
+    const nx=$("#mcnext");nx.focus({preventScroll:true});nx.onclick=()=>{delete MCC[cIdx];mcPick=null;grade(ok)}};
+  on(".mco","click",e=>pick(+e.currentTarget.dataset.i));
+}})(karten);
+function kmodeHTML(){const m=ST.kmode||"mc";return `<div class="seg kseg"><button data-km="mc" aria-pressed="${m==="mc"}">Auswahl</button><button data-km="frei" aria-pressed="${m==="frei"}">Karteikarte</button></div>`}
+function bindKmode(prev){on("[data-km]","click",e=>{ST.kmode=e.currentTarget.dataset.km;mcPick=null;save();vib(6);karten()})}
+function kmodeBar(prev){prev();const lz=$("#lz");if((ST.kmode||"mc")==="frei"&&lz&&!lz.querySelector(".kseg")){lz.insertAdjacentHTML("afterbegin",kmodeHTML());bindKmode(prev)}}
+addEventListener("keydown",e=>{if(cur!=="lernen"||lernView!=="karten"||(ST.kmode||"mc")!=="mc")return;const k="1234abcd".indexOf(e.key.toLowerCase());
+  if(k>=0&&mcPick==null){const b=document.querySelector(`.mco[data-i="${k%4}"]`);if(b)b.click()}else if((e.key==="Enter"||e.key===" ")&&mcPick!=null){const n=$("#mcnext");if(n){e.preventDefault();n.click()}}});
+
+/*EXT5-END*/
 /* ================= Start ================= */
 lsLoad(); streak();
 let startTab="heute"; try{startTab=localStorage.getItem(LS+"-tab")||"heute"}catch(e){}
